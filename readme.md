@@ -1,27 +1,27 @@
-# Guidance
-This is a suggested template for a project. You can modify it as you please, but
-but remember to keep:
+# Level 4 Individual Project
 
-* a timelog, updated regularly in the `timelog.md` format;
-* all source under version control;
-* data well organised and with appropriate ethical approval (for human subject data);
+* Investigating the Ability of CNNs to Count Visual Concepts
+* Fergus Steel
+* 2542391s
+* Dr. Paul Siebert
 
-Here's an overview of the structure as it stands:
+# Repository Structure
 
-* `timelog.md` The time log for your project.
-* `plan.md` A skeleton week-by-week plan for the project. 
-* `data/` data you acquire during the project
-* `src/` source code for your project
-* `status_report/` the status report submitted in December
-* `meetings/` Records of the meetings you have during the project.
-* `dissertation/` source and for your project dissertation
-* `presentation/` your presentation
+This is an overview of the structure of this repository as it stands:
 
-* Make sure you add a `.gitignore` or similar for your VCS for the tools you are using!
-* Add any appropriate continuous integration (e.g. Travis CI) in this directory.
+* `timelog.md` A time log that denotes the time commited to this project and actions committed.
+* `plan.md` A week-by-week plan for this project.
+* `data/` A folder containing the data used in this project.
+* `src/` source code for this project.
+* `status_report/` the status report to be submitted in December.
+* `minutes/` A file containing; plans, notes and templates for minutes taken during meetings.
+* `dissertation/` A file containing the files relating to this project's dissertation.
+* `presentation/` A file containing the files relating to this project's presentation.
+* `summer/` A file containing any work done over the summer of 2023
 
-* Remove this `readme.md` file from any repository and replace it with something more appropriate!
+## Instruction For Use/Compilation
 
-## Important
 * It should be easy to rebuild and run your project and your dissertation
-        * Include clear instructions in the relevant directories to make this possible
+        * Include clear instructions in the relevant directories to make this possible.
+* Instructions and Documentation for doing so will be included here when action has been taken.
+* Makefiles will be created such that this can be done easily.
