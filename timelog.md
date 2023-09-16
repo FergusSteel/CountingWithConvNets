@@ -1,9 +1,9 @@
 # Timelog
 
-* PROJECT NAME
-* YOUR NAME
-* STUDENT_ID
-* SUPERVISOR NAME
+* Investigating the Ability of CNNs to Count Visual Concepts
+* Fergus Steel
+* 2542391s
+* Dr. Paul Siebert
 
 ## Guidance
 
@@ -14,13 +14,12 @@
 
 ## Week 1
 
-### 19 Oct 2019
+### 15 Sep 2023
 
-* *4 hours* Read the project guidance notes
-* *0.5 hour* Created GitLab repository and cloned the cookiecutter for the projects
-* *1 hour* Modified dissertation template, compiled  
+* *0.5 hours*, made initial contact with supervisor.
 
-## 20 Oct 2019
+### 16 Sep 2023
 
-* *1 hour* meeting with supervisor
-* *2 hours* writing initial version of test harness
+* *1 hour* Set up version control system, and customised template.
+* *1 hour* Created meeting minutes template, and planned for meeting01 with supervisor.
+* *0.5 hour* Filled out the "summer" document.
