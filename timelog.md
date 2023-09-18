@@ -23,3 +23,10 @@
 * *1 hour* Set up version control system, and customised template.
 * *1 hour* Created meeting minutes template, and planned for meeting01 with supervisor.
 * *0.5 hour* Filled out the "summer" document.
+
+### 18 Sep 2023
+
+* *1 hour* Finished "Counting and locating high-density objects using convolutional neural networks" and continued to develop ideas and plan for meeting.
+* *0.5 hours* Researched relevant architectures (R-CNN, Fast R-CNN, YOLO)
+* *0.5 hours* Read the RetinaNet paper and made notes.
+* *1.5 hours* Read the survey of crowd counting techniques paper.

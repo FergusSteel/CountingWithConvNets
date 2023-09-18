@@ -10,9 +10,10 @@
 
 | Talking Point 1 | Description |
 | ----- | ----- |
-| Going Forward | Are you available for weekly meetings at a scheduled time? Always online? |
-| The Project Brief | - SE vs Research Project, |
-| Item 2 | -  |
+| Going Forward | Are you available for weekly meetings at a scheduled time? Always online? Have a look at GitHub / Can the repo be public?|
+| The Project Brief | - SE vs Research Project, I would prefer research oriented. |
+| Deliverable | Real time processing? Inputs/Sensors? Classifying objects? Locating Objects? Images or Videos (target fps?) (using LSTMs to encode a count over time)?  |
+| Ideas | Have used Keras before so would like to use that for the model. |
 
 ## Meeting Notes
 
@@ -29,6 +30,6 @@ Insert further notes here....
 
 ### Action Point 1
 
-Create makefile for dissertation.pdf
+Create makefile for dissertation.pdf - <https://github.com/csperkins/project-template>
 
 ### Action Point 2

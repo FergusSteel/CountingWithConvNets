@@ -1,9 +1,9 @@
 # Plan
 
-* PROJECT TITLE
-* YOUR NAME
-* STUDENT ID
-* SUPERVISOR NAME
+* Investigating the Ability of CNNs to Count Visual Concepts
+* Fergus Steel
+* 2542391s
+* Dr. Paul Siebert
 
 Week-by-week plan for the whole project. Update this as you go along.
 
