@@ -51,3 +51,12 @@ Summary of papers read with notes and links.
 * Related to OverFeat (maybe look into that idk)
 * Uses a regression module to generate boxes.
 * CNN -> RNN with LSTMs. Each step, LSTM outputs a new bounding box (woah). This stops when LSTM cannot create a bounding box that is above a certain confidence threshold.
+
+## Lightweight convolutionla neural network for counting densely piled steel bars
+
+* Research aimed at developing low cost network that can accurately count DPSB on a handheld device at construction site.
+* Were able to reduce numer of parameters and computation cost by 76.86% and 44.82% respectively.
+* 66 fps, 99.25% F1 Score.
+* Used YoloV5 as backbone of network for high speed, high accuracy.
+* "Modern object detector is usually composed of... a backbone for feature extraction, a neck for fusing feature maps of different scales, several heads for outputting detection information."
+  * This is in-line with the density estimator paper that used a CNN for feature extraction, a PPM for the fusing of feature maps and the MSS for estimating the confidence maps.

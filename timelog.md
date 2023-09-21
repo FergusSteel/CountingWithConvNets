@@ -30,3 +30,11 @@
 * *0.5 hours* Researched relevant architectures (R-CNN, Fast R-CNN, YOLO)
 * *0.5 hours* Read the RetinaNet paper and made notes.
 * *1.5 hours* Read the survey of crowd counting techniques paper.
+
+### 19 Sep 2023
+
+* *1 hour* Read the DPSB paper + notes
+
+### 21 Sep 2023
+
+* *1 hour* Initial Meeting with Paul, Introductions and Advice.
