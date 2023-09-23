@@ -2,7 +2,7 @@
 
 ## Meeting Description
 
-**Date/Time:** 20/09/2023
+**Date/Time:** 21/09/2023
 **Meeting Number:** \#01
 **Meeting Location** Online
 

@@ -9,21 +9,21 @@ Week-by-week plan for the whole project. Update this as you go along.
 
 ## Winter semester
 
-* **Week 1**
-* **Week 2**
-* **Week 3**
-* **Week 4**
-* **Week 5**
-* **Week 6**
-* **Week 7**
-* **Week 8**
-* **Week 9**
-* **Week 10**
-* **Week 11 [PROJECT WEEK]**
-* **Week 12 [PROJECT WEEK]** Status report submitted.
+* **Week 1** Initial Meeting, Research and Experimentation
+* **Week 2** Define Direction, Setup Reference Manager, Collate Related Material, Create Related (Panoptic/Segmentation/Attention) Demonstration, Complete Milestones and Timeline
+* **Week 3** Conduct Extensive Literature Review!
+* **Week 4** Draft a literature review summary, identify research gaps
+* **Week 5** Dataset Decisions (creating one / using one)? Preprocessing plans? Language Model? Generally Select Toolset.
+* **Week 6** Collate dataset, complete preprocessing (augmentation, resizing, encoding?)
+* **Week 7-10** Design CNN architecture with other architecture decisions (attention/transformer), bening implementing the CNN models and other mechanisms.
+* **Week 10** Training and Testing. Optimizations (hyperparameter tweaking), Visualizations, attention maps/density maps.
+* **Week 11 [PROJECT WEEK]** Probably finishing incompleted milestons + benchmark performance tables (accuracy, speeed, etc.)
+* **Week 12 [PROJECT WEEK]** Status report writing and submissions.
 
 ## Winter break
 
+* Start Writing some Diss
+ 
 ## Spring Semester
 
 * **Week 13**

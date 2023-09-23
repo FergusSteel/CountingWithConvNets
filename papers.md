@@ -60,3 +60,30 @@ Summary of papers read with notes and links.
 * Used YoloV5 as backbone of network for high speed, high accuracy.
 * "Modern object detector is usually composed of... a backbone for feature extraction, a neck for fusing feature maps of different scales, several heads for outputting detection information."
   * This is in-line with the density estimator paper that used a CNN for feature extraction, a PPM for the fusing of feature maps and the MSS for estimating the confidence maps.
+
+## Feature Pyramid Networks for Object Detection
+
+<https://arxiv.org/pdf/1612.03144.pdf>
+
+* Building feature pyramid networks that represent the features of an input image in a hierarchical pyramid that is constructed through a bottom-pathway and a top-down pathway which are connected via lateral connections
+* Bottom-Up Pathway is feedforward computation, where the feature maps are computed at several different scales (filter size / strides). Each stage of the network may have many layers, the last of which is the feature map used in the lateral connections (deepest map at each stage should have the strongest features)
+* Top-Down Pathway is the stage-by-stage upscaling the semantically strong feature maps in order to encode locality. Uses nearest-neighbour upsampling by default
+* Lateral connections adds the Bottom-Up (1x1 convolved) and the upsampled feature map together to combine this information. 
+* Trained on trainval35k COCO dataset (seems like a reasonable size for what I want to do?)
+
+# Panoptic Segmentation Computer Vision Research!
+
+Panoptic Segmentation combines Semantic Segmentation and Instance Segmentation such that an input image can be contextualised into masks of instances of objects that are each classified+located i.e. aims to create universal solution to instance/semantic/panoptic segmentation tasks.
+
+## Masked-Attention Mask Transformer for Universal Segmentation
+
+* Whilst Universal Architectures show state-of-the-art results in segmentation tasks, their performance lacks behind specialized architectures, they are also harder to train.
+* This paper builds upon a "meta architecture" of a backbone feature extractor, a pixel decoder and a Transformer decoder
+* Pixel decoder sounds like the Top-Down stage of the FPN (oh thats literally what is used in the MetaArchitecture MaskFormer)
+
+## OneFormer: One Transformer to Rule Universal Image Segmentation
+
+
+## Mask Dino: Towards a Unified Transformer-based Framework for Object Detection and Segmentation
+
+This paper is presents the state of the art Panoptic Segmenter

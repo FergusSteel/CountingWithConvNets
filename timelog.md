@@ -37,4 +37,15 @@
 
 ### 21 Sep 2023
 
-* *1 hour* Initial Meeting with Paul, Introductions and Advice.
+* *2 hour* Initial Meeting with Paul, Introductions and Advice.
+
+### 22 Sep 2023
+
+* *0.5 hours* Read Feature Pyramid Network Paper to develop understanding of feature extractors.
+* *2 hour* Panoptic Segmentation Research, OneFormer, Mask2Former, K-Net and LPSNet investigations began reading papers.
+* *0.5 hours* Began considering focussing on Attention Mechanisms and the role they may be able to perform?
+* *1 hour* Attempting to install tf-models-official for the purpose of demonstration of models but encountered dependency clashes and had to reinstall several times, should really be using a virtual environment...
+
+### 23 Sep 2023
+
+* *0.5 hours* Initial plan for Semester 1
