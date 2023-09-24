@@ -49,3 +49,8 @@
 ### 23 Sep 2023
 
 * *0.5 hours* Initial plan for Semester 1
+
+### 24 Sep 2023
+
+* *0.5 hours* Read another crowd counting article - https://www.analyticsvidhya.com/blog/2021/06/crowd-counting-using-deep-learning/
+* *1 hour* Read Convolutional Neural Network Chapter in "Artificial Intelligence, a Modern Approach"
