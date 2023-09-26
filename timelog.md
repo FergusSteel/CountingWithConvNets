@@ -54,3 +54,14 @@
 
 * *0.5 hours* Read another crowd counting article - https://www.analyticsvidhya.com/blog/2021/06/crowd-counting-using-deep-learning/
 * *1 hour* Read Convolutional Neural Network Chapter in "Artificial Intelligence, a Modern Approach"
+
+### 25 Sep 2023
+
+* *0.5 hours* Read NARX paper (Lin et al. 1996)
+* *0.5 hours* Read CNN-NARX paper (Jalal et al. 2019) 
+* *1 hours* Read MIST-RNN paper, did further NARX research.
+* *0.5 hours* further temporal feature research (ConvLSTM);
+
+### 26 Sep 2023
+
+* *1 hour* Tried to fix NVIDIA Graphics Drivers on laptop (failure)

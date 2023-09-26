@@ -71,19 +71,43 @@ Summary of papers read with notes and links.
 * Lateral connections adds the Bottom-Up (1x1 convolved) and the upsampled feature map together to combine this information. 
 * Trained on trainval35k COCO dataset (seems like a reasonable size for what I want to do?)
 
-# Panoptic Segmentation Computer Vision Research!
+## Learning Long-Term Dependencies in NARX Recurrent Neural Networks
+
+* Gradient-Descent Learning Algoirhtms perform poorly on tasks that involve long-term dependencies. This is lessened in the NARX RNN architecture.
+* This class of architectures have been shown to be well suited for modelling nonlinear systems (heat exchangers, time series, etc.)
+* A system storing information over time (i.e. a model learning) needs to be robust to noise and this is accomplished if the states exist in the reduced attracting set of the hyperbloic attractor. **i.e the eigenvalues of the Jacobian are contained within the unit circle.** When this requirement is not satisfied we get a formal definition of the vanishing gradient problem.
+* In complex systems like crowd-counting could this improve accuracy???
+
+## Analyzing and Exploiting NARX RNNs for Long-Term Dependencies
+
+* Introduces MIST-RNN that better handle vanishing-graident problem, are more efficient, and improve performance on problems with very long-term dependencies.
+
+## Spatiotemporal Modeling for Crowd Counting in Videos
+
+* Demonstrated that including temporal information improves crowd counting in videos.
+
+## Predicting Surgical Phases using CNN-NARX Neural Network
+
+* Using CNN_NARX to implement spatial and temporal information to improve accuracy (doesnt work but cool)
+* Output of CNNs are fed into NARX architecture for predictions
+* CNNs were trained independently on dataset.
+* This paper finds that the NARX netowrk needs additional systems, which is feasible in the capacity I'm thinking about using it (passing output from Crowd Counting CNN)
+
+## CNN-Based Deensity Estimation and Crowd Counting: A Survey
+
+* This paper surveyed over 220 works to study crwowd counting models, mainly density-map estimation methods.
+
+## Panoptic Segmentation Computer Vision Research!
 
 Panoptic Segmentation combines Semantic Segmentation and Instance Segmentation such that an input image can be contextualised into masks of instances of objects that are each classified+located i.e. aims to create universal solution to instance/semantic/panoptic segmentation tasks.
 
-## Masked-Attention Mask Transformer for Universal Segmentation
+### Masked-Attention Mask Transformer for Universal Segmentation
 
 * Whilst Universal Architectures show state-of-the-art results in segmentation tasks, their performance lacks behind specialized architectures, they are also harder to train.
 * This paper builds upon a "meta architecture" of a backbone feature extractor, a pixel decoder and a Transformer decoder
 * Pixel decoder sounds like the Top-Down stage of the FPN (oh thats literally what is used in the MetaArchitecture MaskFormer)
 
-## OneFormer: One Transformer to Rule Universal Image Segmentation
 
-
-## Mask Dino: Towards a Unified Transformer-based Framework for Object Detection and Segmentation
+### Mask Dino: Towards a Unified Transformer-based Framework for Object Detection and Segmentation
 
 This paper is presents the state of the art Panoptic Segmenter
