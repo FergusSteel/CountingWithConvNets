@@ -64,4 +64,5 @@
 
 ### 26 Sep 2023
 
-* *1 hour* Tried to fix NVIDIA Graphics Drivers on laptop (failure)
+* *2 hours* Tried to fix NVIDIA Graphics Drivers on laptop (failure)
+* *1 hour* drafted research direction ideas.
