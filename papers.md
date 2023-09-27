@@ -111,3 +111,7 @@ Panoptic Segmentation combines Semantic Segmentation and Instance Segmentation s
 ### Mask Dino: Towards a Unified Transformer-based Framework for Object Detection and Segmentation
 
 This paper is presents the state of the art Panoptic Segmenter
+
+## Temporal Papers
+
+These are some of the papers I found covering similiar research to my idea. <https://conradsanderson.id.au/pdfs/ge_temporal_fine_grained_classification_dicta_2016.pdf>, <https://openaccess.thecvf.com/content_ICCV_2017/papers/Zhang_FCN-rLSTM_Deep_Spatio-Temporal_ICCV_2017_paper.pdf>, <https://arxiv.org/abs/1707.07890#:~:text=To%20exploit%20the%20otherwise%20very%20useful%20temporal%20information,method%20fully%20captures%20both%20spatial%20and%20temporal%20dependencies.>
