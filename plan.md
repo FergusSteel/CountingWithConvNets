@@ -13,9 +13,8 @@ Week-by-week plan for the whole project. Update this as you go along.
 * **Week 2** Define Direction, Setup Reference Manager, Collate Related Material, Create Related (Panoptic/Segmentation/Attention) Demonstration, Complete Milestones and Timeline
 * **Week 3** Conduct Extensive Literature Review!
 * **Week 4** Draft a literature review summary, identify research gaps
-* **Week 5** Dataset Decisions (creating one / using one)? Preprocessing plans? Language Model? Generally Select Toolset.
-* **Week 6** Collate dataset, complete preprocessing (augmentation, resizing, encoding?)
-* **Week 7-10** Design CNN architecture with other architecture decisions (attention/transformer), bening implementing the CNN models and other mechanisms.
+* **Week 5** Dataset Decisions (creating one / using one)? Preprocessing plans? Generally Select Toolset. Collate dataset, complete preprocessing (augmentation, resizing, encoding?)
+* **Week 6-10** Design CNN architecture with other architecture decisions (attention/transformer), bening implementing the CNN models and other mechanisms.
 * **Week 10** Training and Testing. Optimizations (hyperparameter tweaking), Visualizations, attention maps/density maps.
 * **Week 11 [PROJECT WEEK]** Probably finishing incompleted milestons + benchmark performance tables (accuracy, speeed, etc.)
 * **Week 12 [PROJECT WEEK]** Status report writing and submissions.
