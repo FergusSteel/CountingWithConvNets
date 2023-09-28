@@ -82,9 +82,6 @@ Summary of papers read with notes and links.
 
 * Introduces MIST-RNN that better handle vanishing-graident problem, are more efficient, and improve performance on problems with very long-term dependencies.
 
-## Spatiotemporal Modeling for Crowd Counting in Videos
-
-* Demonstrated that including temporal information improves crowd counting in videos.
 
 ## Predicting Surgical Phases using CNN-NARX Neural Network
 
@@ -112,6 +109,61 @@ Panoptic Segmentation combines Semantic Segmentation and Instance Segmentation s
 
 This paper is presents the state of the art Panoptic Segmenter
 
-## Temporal Papers
+## Spatio-Temporal Papers
 
 These are some of the papers I found covering similiar research to my idea. <https://conradsanderson.id.au/pdfs/ge_temporal_fine_grained_classification_dicta_2016.pdf>, <https://openaccess.thecvf.com/content_ICCV_2017/papers/Zhang_FCN-rLSTM_Deep_Spatio-Temporal_ICCV_2017_paper.pdf>, <https://arxiv.org/abs/1707.07890#:~:text=To%20exploit%20the%20otherwise%20very%20useful%20temporal%20information,method%20fully%20captures%20both%20spatial%20and%20temporal%20dependencies.>
+
+### Deep Spatio-Temporal Neural Networks for Vehicle Counting in City Cameras
+
+* FCN-rLSTM stacks CNNs to output density maps of each frame which are fed into LSTMs as series.
+* "However, no existing work models the spatio-temporal correlation for object counting"
+* Density maps used to avoid tracking individual vehicles as this improves performance (especially in low spatial/temporal resolutions (low res, low fps))
+* Leverages the strengths of the FCN for pixel-level prediction and strengths of LSTM for learning complex temporal dynamics.
+* Residual connections used to speed up training by 5x
+* The density maps are reshaped into a 1D vector, which is fed into three LSTM layers with 100 hidden units. After the LSTM unitts they are fed into a single Dense layer which is summed with the density map (residual connection)
+* Uses the typical density map ground truths, gaussian kernels applied to centre point of the bounding box.
+* Two loss fucntions for each stage, final loss funtion is (loss of density map estimation) + lambda*(loss of global count) where lambda is a tunable hyper parameter
+* See (Algorithm 1) in this paper for training algorithm.
+* Restriccted by the avilable memory;
+
+
+### Spatiotemporal Modeling for Crowd Counting in Videos
+
+* Demonstrated that including temporal information improves crowd counting in videos.
+* Incorporating temporal information can boost accuracy in compex scenes as it allows  a model to capture motion information.
+* ConvLSTM ot a stack like previous paper, if you remove the residual connections between frames, the architecture is really just a FCN with gates. (ConvLSTM-nt, model in this paper).
+  * This model actually does outperform other crowd counting methods on the UCF_CC_50 dataset (images not videos) showing that the model is effective even without incorporating the temporal information. 
+* Extends ConvLSTM to be birdirectional. Meaning long-range information is captured in both. This architecture consistely outperforms the unidirectional version.
+* On the UCSD and Mall datasets which consist of video data, ConvLSTM-nt does outperform other methods but is superseceeded by first the ConvLSTM then by the Bidirectional ConvLSTM.
+* These methods (convLSTMs) also respond well to transfer learning. Outperforms other methods on Mall dataset after being trained on UCSD dataset (plus 50 Mall frames for adaptation)
+
+### Exploiting Temporal Information for DCNN-based Fine-Grained Object Classification
+
+* NOTE: Fine-grained classification is where you are classifing between classes in a sub-category of objects e.g. which breed is this dog
+* Uses dataset of videos of birds, which are not static
+* Seperate CNNs for spatial and temporal features, then combined via Co-Occurrence Encoding module.
+* Moving camera shows drop in accurac (unsuprisingly)
+
+### A Spatio-Temporal Attentive Network for Video-Based Crowd Counting
+
+* "Only a bunch of works take advantage of temporal
+consistency in video sequences. In this work, we propose a spatiotemporal attentive neural network to estimate the number of pedestrians from surveillance videos. By taking advantage of the temporal correlation between consecutive frames, we lowered state-of-the-art count error by 5% and localization error by 7.5% on the widely-used FDST benchmark." - I thought of this independently!
+
+## The use of NARX Neural Networks to predict Chaotic Time Series
+
+* Exogeneous fatures are time-independent values in a time series.
+* "Neural Networks are powerful when applied to problems whose solutiosn require knowledge which is difficult to specify, but for which there is an abundance of examples"
+* Long time depencies are a problem due to vanishing gradient
+* A long memory process is where a value at a time is correlated to a value at a time in the future.
+* "Learning is more effective in NARX networks (i.e. gradient descent is better)"
+* "These networks converge much faster and generalize better than other networks."
+* NARX networks are implemented by usng a feedforward NN with the embedded memory plus a delayed connexion from the second layer to the input.
+* This paper proposes a dynamic back-propogation algorithm.
+* training process hs difficulties; Large number of parameters, "overtraining/overfitting". A solution to these problems is penalizing the parameter increase.
+  * This is Bayesian Regularization which balances the Squared errors and the weights and then determines the best combination.
+* The Levenberg-Marquardt training algorithm is used. 
+
+## Dataset Ideas
+
+* https://sutdcv.github.io/Animal-Kingdom/Animal_Kingdom/pose_estimation/README_pose_estimation.html !
+* https://paperswithcode.com/dataset/mot17 !!

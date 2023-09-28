@@ -50,6 +50,8 @@
 
 * *0.5 hours* Initial plan for Semester 1
 
+## Week 2
+
 ### 24 Sep 2023
 
 * *0.5 hours* Read another crowd counting article - https://www.analyticsvidhya.com/blog/2021/06/crowd-counting-using-deep-learning/
@@ -66,3 +68,11 @@
 
 * *2 hours* Tried to fix NVIDIA Graphics Drivers on laptop (failure)
 * *1 hour* drafted research direction ideas.
+
+### 27 Sep 2023
+
+* *3 hours* Reading existing Spatio-Temporal papers, understanding techniques used.
+
+### 28 Sep 2023
+
+* *1.5 hours* Further NARX reserach, read predicting Chaotic Time Series which goes into muhc more detail on the artchitectures of NARX networks
