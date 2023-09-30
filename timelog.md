@@ -78,3 +78,6 @@
 * *1.5 hours* Further NARX reserach, read predicting Chaotic Time Series which goes into muhc more detail on the artchitectures of NARX networks
 * *0.5 hours* Meeting 2 Prep
 * *2 hours* Supervisor Meeting 2
+
+### 30 Sep 2023
+* *1.16 hour* Watched Geoffrey Hinton's "What is wrong with convoultional neural nets?"

@@ -163,6 +163,18 @@ consistency in video sequences. In this work, we propose a spatiotemporal attent
   * This is Bayesian Regularization which balances the Squared errors and the weights and then determines the best combination.
 * The Levenberg-Marquardt training algorithm is used. 
 
+## Capsule Nets
+
+### G. Hinton "What is wrong with convolution neural networks."
+
+* A capsule does coincidence filtering, when it finds a cluster of predictions it outputs a high probabiltiy that an entity of its type exists in its domain, and the center of that cluster.
+* High-dimension coincidences dont really happen.
+* Pooling-Layers lose information fundamentally, its a disaster that they work so well as its going to be hard to get rid of.
+* Without max-pooling, convnets have equivariance.
+  * Place-coded equivariance is where as a low-level part moves to a very different position it is represented by a different capsule (different neurons)
+  * Rate-coded equivariance is where as you move a part around the same neurons are encoding but their acitvities are changing.
+* Capsule nets, only deal with one instance at a time (uh oh)
+
 ## Dataset Ideas
 
 * https://sutdcv.github.io/Animal-Kingdom/Animal_Kingdom/pose_estimation/README_pose_estimation.html !
