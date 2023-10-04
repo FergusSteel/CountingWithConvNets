@@ -94,7 +94,51 @@ Summary of papers read with notes and links.
 
 * This paper surveyed over 220 works to study crwowd counting models, mainly density-map estimation methods.
 
-## Panoptic Segmentation Computer Vision Research!
+## Accurate few-shot object counting Hough matching feature enhancement
+
+* Well learned model for class-specific object counting only handles certain category covered in training.
+* Proposes Few-shot object counting (FSC) that inspired by human abvility to quickly generalise new concepts
+* FSC has two stages, feature extracting and matching.
+* Hough transform used for rigid object matching.
+* HMFENet for FSC proposed: uses Hough matching to get similarity map between exemplares I_E and the query image I_Q.
+  * Backbone CNN -> Local Self-Attention to refine it -> Exemplar feature aggregation module to enhance.
+  * Secondly, the learnable Hough Matching module outputs similarity maps.
+  * Finally fed to counter module that outputs a density map.
+* **ResNet trained on ImageNet used as backbone feature extractor!!!** 
+
+## Learning to Count Everything
+
+* Introduces FamNet that inspired paper above and below.
+* FSC to solve generability problem
+* Introduces dataset on https://github.com/cvlab-stonybrook/LearningToCountEverything
+* density map estimation needs millions of annotations on thousands of images which is cost/labour intensive process.
+* In FSC the inputs for the coutning task are an image and a few examples of the same image for the object of interest.
+*  FamNet has two key components: 1) a feature extraction module, and 2) a density prediction module.
+* density estimation do not have to commit to binary decisions so deal better with occlusion.
+* **First four blocks from ResNet pre-trained on ImageNet used as backbone feature extractor!!! (these blocks are frozen during training)** 
+* "The density prediction module consists of five convolution blocks and three upsampling layers placed after the first, second, and third convolution layers. The last layer is a 1×1 convolution layer, which predicts the 2D density map. The size of the predicted density map is the same as the size of the input image."
+* "To train FamNet, we minimize the mean squared error between the predicted density map and the ground truth density map." This is pretty standard and what I implemented in the laptop killer 
+* ![SAFENET](paper_attachments/SAFENET.JPG)
+
+## Few-shot Object Counting with Similarity-Aware Feature Enhancement
+
+* A popular solution to FSC is to first represent both the exemplar object (i.e. the support image) and the query image with expressive features, and then pinpoint the candidates via analyzing the feature correlation
+* Good description of what we are actually doing: "In FSC, object classes are divided into base classes Cb and novel classes Cn, where Cb and Cn have no intersection. For each query image from Cb, both a few support images and the ground-truth density map are provided. While, for query images from Cn, only a few support images are available."
+* Main takeaway from this paper is their "Similarity-aware feature enhancement module" - **see paper for more information** its complex but fantastic
+
+## Zero-Shot Object Counting
+
+* This is sort of a follow on paper from the FSC papers discussed above, but uses exampler generators (cool)
+* Again focused on *class agnostic counting* 
+* Having bounding boxes for the exemplar images is not practical for real world system.
+* Exempler free is proposed in Ranjan et al with RepRPN (read this) - Viresh Ranjan and Minh Hoai. Exemplar free class agnostic counting (only works for images with single dominant object for counting)
+* Problem is two-fold, how to localize patches that contain the object of provided class name and how to select good exmeplars.
+* Model is trained to measure teh goodness of an input patch based on its corresponding feature map. - "Viresh Ranjan and Minh Hoai. Exemplar free class agnostic
+counting. "Specifically, given an arbitrary patch and a pre-trained exemplar-based object counter, we train this model to predict the counting error of the counter when using the patch as the exemplar"
+* Use the FSC-147 dataset
+* Can count multiple classes.
+
+## Panoptic Segmentation Computer Vision Research
 
 Panoptic Segmentation combines Semantic Segmentation and Instance Segmentation such that an input image can be contextualised into masks of instances of objects that are each classified+located i.e. aims to create universal solution to instance/semantic/panoptic segmentation tasks.
 

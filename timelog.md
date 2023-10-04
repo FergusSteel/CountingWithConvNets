@@ -81,3 +81,14 @@
 
 ### 30 Sep 2023
 * *1.16 hour* Watched Geoffrey Hinton's "What is wrong with convoultional neural nets?"
+
+## Week 2
+
+### 2 Oct 2023
+
+
+
+### 3 Oct 2023
+
+* *0.5 hours* watched Capsule networks - A survey by Dr. Yogesh Rawat, UCF
+* *3 hours* Few-shot / Zero Shot Object counting research. - can we use capsule networks in exempler inspection?
