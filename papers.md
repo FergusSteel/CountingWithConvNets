@@ -168,6 +168,12 @@ counting. "Specifically, given an arbitrary patch and a pre-trained exemplar-bas
 * Test-time adaptation helps model to distinguish between foreground and background features
 * Main takeaway is removing background influence in exemplars is a good thing
 
+## Can SAM Count Anything? An Empirical Study on Sam Counting
+
+* SAM is meta AI's "Segment Anything Model"
+* Lags behind state-of-the-art FSC models.
+* SAM segments densely packed objects together.
+* HMFEnet performs best in their experiments
 
 ## Panoptic Segmentation Computer Vision Research
 
