@@ -138,6 +138,37 @@ counting. "Specifically, given an arbitrary patch and a pre-trained exemplar-bas
 * Use the FSC-147 dataset
 * Can count multiple classes.
 
+## Exemplar Free Class Agnostic Counting
+
+* Proposes a region proposal network that is used for identifying exemplars.
+* To avoid checking all possible exampler images, the architecture propsoed called Repetetive RPN (RepNET) automatically identifies a few examplars from the most frequent classes in the image.
+* Each proposed examplar has a high res density map prediction
+* The model will pck out the class of interest in the image, i.e. the one witht he highest count, this is done with a repitions score, that will score any proposal from the RepRPN and then select the examples that have the highest repetition score.
+* Previous work (FamNet) requires test-time adaptation given the examples
+* The proposals that are select by RepRPN (highest rep. scores) are then passed to the density prediction network to produce the density map.
+* The features of the exemplars are obtained by performing ROI pooling on the backbone features at the locations of the proposal boxes.
+* RepRPN is trained on MSCOCO to predict, objectness score, the bounding box and the repetition score.
+
+
+## ConCoNet: Class-agnostic counting with positive and negative exemplars
+
+* Again hammers home that traditional object counting only works on predefined set of categories, which is inflexible and cost/labour intensive.
+* ConCoNet implements negative examplers to learn a more discriminative representation of the target class.
+* Augments FamNet and BMNet|!¬
+* The maths is cool, but not all that different from the FamNet paper, have a look at paper if relevant
+
+## MACnet: Mask augemtned counting network for class-agnostic counting
+
+* Problem with bounding box approach - surrounding background information is included.
+* MACnet uses segmentation masks in defining exemplars.
+* Retrieves exemplars from pixel space rather than feature space, because feature space tensor has that background information that this paper is trying to avoid. So all the cropping and masking are done in pixel space THEN have their features extracted.
+* Density maps are then predicted/regressed, then peak finding is applied (which is like NMS) that elimnated redundant peaks (double detections)
+  * Peak finding algorithm just arbitrarily sets threshold to 25% of the max value of the predicted heatmap.
+* Also adds multi-scale exemplars that help to deal with object scale variations (only uses scaling factor of 0.9-1.1 so does this work with big variations?)
+* Test-time adaptation helps model to distinguish between foreground and background features
+* Main takeaway is removing background influence in exemplars is a good thing
+
+
 ## Panoptic Segmentation Computer Vision Research
 
 Panoptic Segmentation combines Semantic Segmentation and Instance Segmentation such that an input image can be contextualised into masks of instances of objects that are each classified+located i.e. aims to create universal solution to instance/semantic/panoptic segmentation tasks.

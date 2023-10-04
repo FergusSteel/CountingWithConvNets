@@ -92,3 +92,8 @@
 
 * *0.5 hours* watched Capsule networks - A survey by Dr. Yogesh Rawat, UCF
 * *3 hours* Few-shot / Zero Shot Object counting research. - can we use capsule networks in exempler inspection?
+
+### 4 Oct 2023
+
+* *1 hour* further Zero Shot Research
+* *2 hours* read more current literature on FSC (general class agnostic counting research)
