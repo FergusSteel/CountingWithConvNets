@@ -86,7 +86,7 @@
 
 ### 2 Oct 2023
 
-
+* *4 hours* Spent all day researching then implementing a demonstration before I bricked my laptop and lost all progress from this day
 
 ### 3 Oct 2023
 
@@ -97,3 +97,7 @@
 
 * *1 hour* further Zero Shot Research
 * *2 hours* read more current literature on FSC (general class agnostic counting research)
+
+### 5 Oct 2023
+
+* *1 hour* Planning for meeting 3

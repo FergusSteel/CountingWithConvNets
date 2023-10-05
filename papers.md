@@ -94,7 +94,16 @@ Summary of papers read with notes and links.
 
 * This paper surveyed over 220 works to study crwowd counting models, mainly density-map estimation methods.
 
-## Accurate few-shot object counting Hough matching feature enhancement
+## Class Agnostic Counting Literature !!!
+
+The majority of the class-agnostic counting networks contain three components:
+1. A feature extractor
+2. A Spatial-Similiarty Module
+3. A regression head
+
+Typically they use exemplar (example patches of the thing(s) to be counted) and create a similiarity map between the exemplar and the input image.
+
+### Accurate few-shot object counting Hough matching feature enhancement
 
 * Well learned model for class-specific object counting only handles certain category covered in training.
 * Proposes Few-shot object counting (FSC) that inspired by human abvility to quickly generalise new concepts
@@ -106,7 +115,7 @@ Summary of papers read with notes and links.
   * Finally fed to counter module that outputs a density map.
 * **ResNet trained on ImageNet used as backbone feature extractor!!!** 
 
-## Learning to Count Everything
+### Learning to Count Everything
 
 * Introduces FamNet that inspired paper above and below.
 * FSC to solve generability problem
@@ -120,13 +129,13 @@ Summary of papers read with notes and links.
 * "To train FamNet, we minimize the mean squared error between the predicted density map and the ground truth density map." This is pretty standard and what I implemented in the laptop killer 
 * ![SAFENET](paper_attachments/SAFENET.JPG)
 
-## Few-shot Object Counting with Similarity-Aware Feature Enhancement
+### Few-shot Object Counting with Similarity-Aware Feature Enhancement
 
 * A popular solution to FSC is to first represent both the exemplar object (i.e. the support image) and the query image with expressive features, and then pinpoint the candidates via analyzing the feature correlation
 * Good description of what we are actually doing: "In FSC, object classes are divided into base classes Cb and novel classes Cn, where Cb and Cn have no intersection. For each query image from Cb, both a few support images and the ground-truth density map are provided. While, for query images from Cn, only a few support images are available."
 * Main takeaway from this paper is their "Similarity-aware feature enhancement module" - **see paper for more information** its complex but fantastic
 
-## Zero-Shot Object Counting
+### Zero-Shot Object Counting
 
 * This is sort of a follow on paper from the FSC papers discussed above, but uses exampler generators (cool)
 * Again focused on *class agnostic counting* 
@@ -138,7 +147,7 @@ counting. "Specifically, given an arbitrary patch and a pre-trained exemplar-bas
 * Use the FSC-147 dataset
 * Can count multiple classes.
 
-## Exemplar Free Class Agnostic Counting
+### Exemplar Free Class Agnostic Counting
 
 * Proposes a region proposal network that is used for identifying exemplars.
 * To avoid checking all possible exampler images, the architecture propsoed called Repetetive RPN (RepNET) automatically identifies a few examplars from the most frequent classes in the image.
@@ -150,14 +159,14 @@ counting. "Specifically, given an arbitrary patch and a pre-trained exemplar-bas
 * RepRPN is trained on MSCOCO to predict, objectness score, the bounding box and the repetition score.
 
 
-## ConCoNet: Class-agnostic counting with positive and negative exemplars
+### ConCoNet: Class-agnostic counting with positive and negative exemplars
 
 * Again hammers home that traditional object counting only works on predefined set of categories, which is inflexible and cost/labour intensive.
 * ConCoNet implements negative examplers to learn a more discriminative representation of the target class.
 * Augments FamNet and BMNet|!¬
 * The maths is cool, but not all that different from the FamNet paper, have a look at paper if relevant
 
-## MACnet: Mask augemtned counting network for class-agnostic counting
+### MACnet: Mask augemtned counting network for class-agnostic counting
 
 * Problem with bounding box approach - surrounding background information is included.
 * MACnet uses segmentation masks in defining exemplars.
@@ -168,12 +177,31 @@ counting. "Specifically, given an arbitrary patch and a pre-trained exemplar-bas
 * Test-time adaptation helps model to distinguish between foreground and background features
 * Main takeaway is removing background influence in exemplars is a good thing
 
-## Can SAM Count Anything? An Empirical Study on Sam Counting
+### Can SAM Count Anything? An Empirical Study on Sam Counting
 
 * SAM is meta AI's "Segment Anything Model"
 * Lags behind state-of-the-art FSC models.
 * SAM segments densely packed objects together.
 * HMFEnet performs best in their experiments
+
+### Interactive Class-Agnostic Object Counting
+
+* A new framework that allows for a human user to interactively provide feedback to improve the accuracy of counter.
+* This is done with a "refinement module" that cna  be used with any density-based visual counter. This creates a more intuitive and verifiable system by incorporating humans in the feedback loop.
+* This is done by providing the user with regions, where in which they select one, and then by exploiting the subitizing capabilities asks them to count a small region of the image.
+* this feedback loops works like so:
+  1. The visual counter estimates the density map of the input image
+  2. The density map is segmented and visualised
+  3. The user select a region and provides a range for the number of objects in the region.
+  4. An objective function is defined based on the provided region and coutn range, and then the parameters of the refinement module are updated by optimizing this objective function
+* There are R non-overlapping segments that make up the entire image, each with moderate size and the (estimated) sum of the density values should be close to an integer and small-ish so a human can predict the count accurately.
+* The algorithm for segmentation is the Iterative Peak Selection and Expansion, this could be helpful if I go down this FSC/ZSC route. The maths for this is super cool too, its an intractable problem that just finds a "good-enough" solution.
+
+## Weighing Counts: Sequential Crowd Counting by Reinforcement Learning
+
+* This paper models crowd counting as a balancing of scales sort of task, i.e. when close to the true count will make small adjustments to the "weight" to reach equilibrium (true count)
+* Uses local count regression - select patches of image then esimates the count of each patch directly with a regression network,.
+* Uses Reinforcement Learning and achieves state-of-the-art results
 
 ## Panoptic Segmentation Computer Vision Research
 
@@ -255,6 +283,10 @@ consistency in video sequences. In this work, we propose a spatiotemporal attent
   * Place-coded equivariance is where as a low-level part moves to a very different position it is represented by a different capsule (different neurons)
   * Rate-coded equivariance is where as you move a part around the same neurons are encoding but their acitvities are changing.
 * Capsule nets, only deal with one instance at a time (uh oh)
+
+# Further reading:
+* COVID-CAPS: A capsule network-based framework for identification of COVID-19 cases from X-ray images
+* Capsule networks for object detection in UAV imagery
 
 ## Dataset Ideas
 
