@@ -197,6 +197,8 @@ counting. "Specifically, given an arbitrary patch and a pre-trained exemplar-bas
 * There are R non-overlapping segments that make up the entire image, each with moderate size and the (estimated) sum of the density values should be close to an integer and small-ish so a human can predict the count accurately.
 * The algorithm for segmentation is the Iterative Peak Selection and Expansion, this could be helpful if I go down this FSC/ZSC route. The maths for this is super cool too, its an intractable problem that just finds a "good-enough" solution.
 
+### CLIP-Count: Towards Text-Guided Zero-Shot Object Counting
+
 ## Weighing Counts: Sequential Crowd Counting by Reinforcement Learning
 
 * This paper models crowd counting as a balancing of scales sort of task, i.e. when close to the true count will make small adjustments to the "weight" to reach equilibrium (true count)
@@ -273,6 +275,7 @@ consistency in video sequences. In this work, we propose a spatiotemporal attent
 * The Levenberg-Marquardt training algorithm is used. 
 
 ## Capsule Nets
+Are they cool? In this essay I will tell you why they are cool and hype.
 
 ### G. Hinton "What is wrong with convolution neural networks."
 
@@ -283,6 +286,20 @@ consistency in video sequences. In this work, we propose a spatiotemporal attent
   * Place-coded equivariance is where as a low-level part moves to a very different position it is represented by a different capsule (different neurons)
   * Rate-coded equivariance is where as you move a part around the same neurons are encoding but their acitvities are changing.
 * Capsule nets, only deal with one instance at a time (uh oh)
+
+### Capsule Networks for Object Detection in UAV Imagery
+
+* The pooling operation causes the feature maps to gradually suppress spacial context.
+* Uses 259 9x9 kernels with stride of 1 and a ReLU to craete feature maps, that are fed to Primary Capsules
+
+### Capsule Networks - A survey
+
+* Routing by Agreement between capsules replaces the "pooling" operation, by outputing a vector that represents the likelihood that a feature being represented by the capsule exists in the input image (Could I use Iterative Peak Selection and Expansion to select patches and use those as input to capsules) the magnitude of which represents the likelihood.
+* Main limitation of CNNs is their inability to recognize pose, texture and deformations of an image. In other words, CNNs are invariant because of pooling.
+* Also require a lot of data to trin a CNNs.
+* Can talk about adverserial attacks (pixel perturbation) in disseration.
+* I think the equivariance of CapsNets would improve the performance of Examplar based class-agnostic counting.
+* !!! **In this light, a generative adversarial network (GAN) with a highly performing discriminator made from capsules (Jaiswal et al., 2018) can be helpful in determining whether a given image is natural or artificially created (fake)** !!!
 
 # Further reading:
 * COVID-CAPS: A capsule network-based framework for identification of COVID-19 cases from X-ray images
