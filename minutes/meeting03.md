@@ -6,12 +6,6 @@
 **Meeting Number:** \#03
 **Meeting Location** Online
 
-## Meeting Agenda
-
-| Talking Point 1 | Description |
-| ----- | ----- |
-| | |
-
 ## Work Done Prior to Meeting
 
 ### Action Points:
@@ -23,18 +17,36 @@ After losing all that progress went back to research papers, read a lot of the m
 
 ## Meeting Minutes
 
+* 14:00 - Meeting start + introductions
+* 14:30 - Laurie's turn
+* 15:00 - Alfie's turn
+* 15:45 - My turn, discussing what has been done, what went wrong, my research direction and my next steps
+* 16:15 - Action Points
+* 16:45 - Paulius' turn
+
 
 
 ## Meeting Notes
 
-* 
+* Keep **everything** under VCS
+* Building upon existing systems is encourages
+* Up until christmas should be completing a "pilot" project which builds simpler system that gives preliminary results and shows progress that can be further built upon after the winter break.
+* It is incredibly important, for when you are writing a disseratation, that you use the words *because & therefore* i.e. it is crucial you explain and justify your decisions.
 
 ## Action Points
 
 ### Action Point 1
 
-* 
+* Research direction is ok, main goal for next week is to define clear research proposition and draft literature review
 
 ### Action Point 2
 
-*
+* Outlining the criteria for success in this project
+
+### Action Point 3
+
+* Understand, by next meeting, what I am going to talk about in my dissertation/literature review.
+
+### Action Point 4
+
+* Complete Research Proposal - What (class-agnostic counting, counting, CapsNets, ConvNets, etc.) and Why? 

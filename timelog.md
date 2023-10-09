@@ -82,7 +82,7 @@
 ### 30 Sep 2023
 * *1.16 hour* Watched Geoffrey Hinton's "What is wrong with convoultional neural nets?"
 
-## Week 2
+## Week 3
 
 ### 2 Oct 2023
 
@@ -101,3 +101,14 @@
 ### 5 Oct 2023
 
 * *1 hour* Planning for meeting 3
+
+### 6 Oct 2023
+
+* *2 hours* planning and research for meeting 3
+* *2.5 hours* Third Supervisor meeting
+
+## Week 4
+
+# 9 Oct 2023
+
+* *0.5 hours* Wrote up meeting minutes for third supervisor meeting.
