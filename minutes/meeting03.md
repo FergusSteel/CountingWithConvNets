@@ -4,7 +4,7 @@
 
 **Date/Time:** 06/10/2023 14:00:00
 **Meeting Number:** \#03
-**Meeting Location** Online
+**Meeting Location** In-Person
 
 ## Work Done Prior to Meeting
 
@@ -23,8 +23,6 @@ After losing all that progress went back to research papers, read a lot of the m
 * 15:45 - My turn, discussing what has been done, what went wrong, my research direction and my next steps
 * 16:15 - Action Points
 * 16:45 - Paulius' turn
-
-
 
 ## Meeting Notes
 
