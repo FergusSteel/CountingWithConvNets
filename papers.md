@@ -40,7 +40,7 @@ Summary of papers read with notes and links.
 * Detection-Based CNN
   * Trained using image dataset annotated by bounding boxes. (locates/detects the people in the input)
 * Regression-Based CNN
-  * Trained by dataset annotated by point or using unsupervised methods. (Directly estimates the amount of people or the dnesity map).
+  * Trained by dataset annotated by point or using unsupervised methods. (Directly estimates the amount of people or the density map).
 * Mentions paper that uses LSTMs in crowd counting <https://ieeexplore.ieee.org/document/7780624>
 * Domain Adaptation Model - these methods can count in any object domain
 
