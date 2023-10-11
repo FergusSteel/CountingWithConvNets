@@ -112,3 +112,8 @@
 # 9 Oct 2023
 
 * *0.5 hours* Wrote up meeting minutes for third supervisor meeting.
+
+# 10 Oct 2023
+
+* *1.5 hours* Read some more Class Agnostic Counting papers thanks to connected papers graph
+* *1.5 hours* Read some more Capsule Network papers and discovered crowding problem.

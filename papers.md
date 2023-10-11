@@ -199,6 +199,16 @@ counting. "Specifically, given an arbitrary patch and a pre-trained exemplar-bas
 
 ### CLIP-Count: Towards Text-Guided Zero-Shot Object Counting
 
+### Class Agnostic Counting (Lu et al. 2018)
+
+* Seminal Class agnostic counting paper published 2018, uses video tracking data as mutable dataset for object counting
+* Frames class-agnostic counting as a "matching" problem, i.e. matching exemplars to input image.
+* Outlines "adaptor" framework for specialist counting, (e.g. count only the red cars in an image)
+* Generic Matching Network defined as a 3 modules:
+  * Encoding stage; two stream network that encodes the exemplar and input image into feature maps.
+  * Matching stage; Learn a discrimnative (learnable) classifier to match exemplars to input patches (phi(broadcast(v):f); theta), i.e. a function phi that matches the broadcasted v (1x1x512 exemplar map broadcasted to size f) to f (H/8xW/8x512 feature map of input image.). This function consists of 1 3x3 conv layer and 1 3x3 conv transpose layer w/ stride 2.
+  * Adaptor stage; trains small amount of parameters on target domain. Consists of 1x1 convolutional layers that are parallel to other conv layers (I dont really understand this will need to look into it more if its relevant.)
+
 ## Weighing Counts: Sequential Crowd Counting by Reinforcement Learning
 
 * This paper models crowd counting as a balancing of scales sort of task, i.e. when close to the true count will make small adjustments to the "weight" to reach equilibrium (true count)
@@ -300,6 +310,25 @@ Are they cool? In this essay I will tell you why they are cool and hype.
 * Can talk about adverserial attacks (pixel perturbation) in disseration.
 * I think the equivariance of CapsNets would improve the performance of Examplar based class-agnostic counting.
 * !!! **In this light, a generative adversarial network (GAN) with a highly performing discriminator made from capsules (Jaiswal et al., 2018) can be helpful in determining whether a given image is natural or artificially created (fake)** !!!
+
+### COVID-CAPS: A capsule network-based framework for identification of COVID-19 cases from X-ray images
+
+* ~"loss of spacial relations between image isntances due to pooling ... rotation or transformation ... result in image not being recognised"
+* Conv -> BatchNorm -> Conv -> AvgPool -> Conv -> Conv -> Capsule Layers that eventually result in positive or negative Caps
+
+### Caosule Networks for Computer Vision Applications: A comprehensive Review
+
+* CNNs fail to encode spatial information in the inputs such as orientation, position, pose, size and relative geometery between features
+* Disadvantages of CapsNets:
+  * Not very robust
+  * Image reconstruction in complex domains is hard
+  * Slow at learning (uh oh)
+* Adding CNNs to CapsNets can enhance performance, alongside attention
+
+
+### Aurelien Geron - Capssule Networks - Tutorial (NOT A PAPER)
+
+* Crowding problem in capsule networks, "A capsule network cannot see two very close identical objects"
 
 # Further reading:
 * COVID-CAPS: A capsule network-based framework for identification of COVID-19 cases from X-ray images
