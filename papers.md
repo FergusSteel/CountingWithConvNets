@@ -152,7 +152,7 @@ counting. "Specifically, given an arbitrary patch and a pre-trained exemplar-bas
 * Proposes a region proposal network that is used for identifying exemplars.
 * To avoid checking all possible exampler images, the architecture propsoed called Repetetive RPN (RepNET) automatically identifies a few examplars from the most frequent classes in the image.
 * Each proposed examplar has a high res density map prediction
-* The model will pck out the class of interest in the image, i.e. the one witht he highest count, this is done with a repitions score, that will score any proposal from the RepRPN and then select the examples that have the highest repetition score.
+* The model will pck out the class of interest in thef image, i.e. the one witht he highest count, this is done with a repitions score, that will score any proposal from the RepRPN and then select the examples that have the highest repetition score.
 * Previous work (FamNet) requires test-time adaptation given the examples
 * The proposals that are select by RepRPN (highest rep. scores) are then passed to the density prediction network to produce the density map.
 * The features of the exemplars are obtained by performing ROI pooling on the backbone features at the locations of the proposal boxes.
