@@ -36,12 +36,18 @@ This idea has been further extended in multiple ways in recent literature, in wa
 
 Geoffrey Hinton, in his talk "What is wrong with Convolutional Neural Networks" describes the pooling layers, which are used in convolutional layers that downsample surrounding information to collate denser feature maps, as a "disaster". This is because pooling operations gradually suppress the spacial context. This means that CNNs fail to encode spatial information such as orientation, position, pose, size and relative geometery in the inputs. The most famous example of this is CNN will often recognise a face, with its feature's locations swapped, incorrectly as a proper face.
 
-These issues are captured in the properties of invariance and equivariance. An invariant is a property of an object is not altered when some transformation is applied to said object, for instance when an object is moved, the perimeter and size are not altered. Equivariance is a property of an object that changes predictably for example the centre of an object is still the centre if that object is rotated. The spatial information of an object is an equivariant property, as the objects shoudl change preditably under a transformation.
+These issues are captured in the properties of invariance and equivariance. An invariant is a property of an object is not altered when some transformation is applied to said object, for instance when an object is moved, the perimeter and size are not altered. Equivariance is a property of an object that changes predictably for example the centre of an object is still the centre if that object is rotated. The spatial information of an object is an equivariant property, as the objects should change predictably under a transformation and since pooling layers mean this information is lost.
+
+From a biological perspective, pooling layers contradicts how we understand our own vision to work. CNNs "see" objects in a way that has no intrinsic coordinate frame and discards the spatial information whilst losing further information during processing (Sabour et al., 2017).
 
 ### What are Capsule Networks and How do they Networks address these problems?
 
+Capsule Networks in their modern form were introduced by Geoffrey Hinton in 2017 and are a modern Neural Network architecture that differ from traditional netowrks. Capsules, replace the neurons in the network by representing their outputs as a vector rather than a scalar. The length of this vector acts as a "vote", where an capsule can output how confident it is. The contents of a capsule's vector, i.e. its orientation captures the entity's properties, such as its spatial arrangement. Higher layer capsules aggregate the input "votes" of the lower-level capsules meaning a part-to-whole hierarchy is formed, making for a more accurate object representation. 
+The idea that through their "routing-by-agreement" algorithm, that by establishing relationships between capsules such that they can collaborate to identify images, they are able to do high-dimensionality coincidence filtering, as the likelihood of multiple capsules agreeing by coincidence is highly unlikely.
+
 ### Why are Capsule Networks potentially suitable architecture's for Class-Agnostic counting?
 
+Capsule Networks offer a variety of benefits that theoretically could aid the performance of class-agnostic counting networks. When considering, that the exemplar images are represented as feature maps that are then compared using some sort of "similarity" module with the feaure map of the input image to count occurences. If Capsule Networks are used in place of typical convolutional methods to represent the exemplar images, we can potentially exploit the benefits in object recognition offered by capsules.
 
 ## Bibliography
 
