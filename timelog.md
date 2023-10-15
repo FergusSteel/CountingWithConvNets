@@ -117,3 +117,29 @@
 
 * *1.5 hours* Read some more Class Agnostic Counting papers thanks to connected papers graph
 * *1.5 hours* Read some more Capsule Network papers and discovered crowding problem.
+
+# 11 Oct 2023
+
+* *1 hour* Started proposal
+
+# 12 Oct 2023
+
+* *1 hour* Meeting 4 Preperation
+
+# 13 Oct 2023
+
+* *2 hours* Meeting 4
+* *1 hour* further proposal work
+
+# 15 Oct 2023
+
+* *0.5 hours* writing up meeting 4 notes
+* *1 hour* finishing proposal.md document
+* *0.5 hour* Read Joseph William's writing style essay before dissertation writing.
+
+# 16 Oct 2023
+
+* (planned) *2 hours* adapting proposal into dissertation
+* (planned) *1 hour* draft reserach questions and collect opinions
+* (planned) *0.5 hours* start to draft experimental plan (Hypothesis and Method)
+* (planned) *0.5 hours* dataset decisions
