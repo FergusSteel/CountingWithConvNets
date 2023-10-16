@@ -330,6 +330,10 @@ Are they cool? In this essay I will tell you why they are cool and hype.
 
 * Crowding problem in capsule networks, "A capsule network cannot see two very close identical objects"
 
+### Attentive Prototype Few-shot Learning with Capsule Network-based Embedding
+
+* Explores using capsule networks in few shot counting object classification
+
 # Further reading:
 * COVID-CAPS: A capsule network-based framework for identification of COVID-19 cases from X-ray images
 * Capsule networks for object detection in UAV imagery
