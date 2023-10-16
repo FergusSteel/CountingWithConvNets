@@ -144,5 +144,9 @@
 *  *1 hour* draft reserach questions and collect opinions
 *  *0.5 hours* start to draft experimental plan (Hypothesis and Method)
 *  *0.5 hours* Revisited FSC Objecting Counting Research (You et al. (2022))
-* (planned) *2 hours* adapting proposal into dissertation
+*  *1 hour* Dissertation outline (Headings and further planning)
+
+### 17 Oct 2023
+
 * (planned) *0.5 hours* dataset decisions
+* (planned) *2 hours* adapting proposal into dissertation
