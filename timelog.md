@@ -148,5 +148,10 @@
 
 ### 17 Oct 2023
 
+* *1 hour* Research Design Writing
+* *1 hour* fixing bibtex, begun writing dissertation
+
+### 18 Oct 2023
+
 * (planned) *0.5 hours* dataset decisions
 * (planned) *2 hours* adapting proposal into dissertation
