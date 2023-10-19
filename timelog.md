@@ -153,5 +153,11 @@
 
 ### 18 Oct 2023
 
-* (planned) *0.5 hours* dataset decisions
-* (planned) *2 hours* adapting proposal into dissertation
+* *1 hour* dataset decisions + alt. plan
+* *1 hours* adapting proposal into dissertation (unfinsihed)
+
+### 19 Oct 2023
+
+* *1 hour* Meeting 5 Plan
+* *1 hour* Network Planning (More CapsNet Research)
+* *0.5 hours* Studied Keras implementation of CapsNet <https://github.com/XifengGuo/CapsNet-Keras/blob/master>
