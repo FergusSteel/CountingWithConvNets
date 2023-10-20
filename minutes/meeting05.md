@@ -2,9 +2,9 @@
 
 ## Meeting Description
 
-**Date/Time:** 10/10/2023 14:30:00
+**Date/Time:** 20/10/2023 14:00:00
 **Meeting Number:** \#05
-**Meeting Location** In-Person
+**Meeting Location** Online
 
 ## Progress Made
 
@@ -21,17 +21,40 @@
 
 ## Meeting Minutes
 
-
+14:25 - Paulius' Turn
+15:00 - My turn
+15:05 - Slides
+15:20 - Goeduls incompleteness theorem and database relationship to capsule idea
+15:45 - Investigating Counting!
+15:50 - Concept of visual concepts - how encapsulatable are things.
+15:55 - What can be counted? 
 
 ## Meeting Notes
 
+* Contemplate relationship to databases - ER Diagrams, BIG SELLING POINT
+* Explore if this idea has been explored before, using capsule as they unify hairy neural network.
+* Goedul Incompleteness theorem - first order logic vs arithmetic. Isomprophism betweent two formal systems should be ab le to be solved both ways.
+* I have touched on an attempt to unite formal copmutational systems.
+* This project has been festering in the back of Paul's head consiering "When are things the same whena re things different"
+* What are the degrees of freedom in the problem? In counting objects have the same properties, we can count them if they are sufficiently similiar"
+* He wants to explore the problem. What are the bounds and limits of counting? - Explore what other people have explored in the area of counting?
+* In a nutshell MNIST shows the style we want to look at
+* Moving from crispy problem to general problem EXPLORE COUNTING not what im making.
 
 ## Action Points
 
 ### Action Point 1
 
-* Get Bounding Box Program Working?
+* COUNTING research, thats what im investigating
+
+### Action point 1.5
+
+* Encapsulation / Database relationship reserach + Go
 
 ### Action Point 2
 
 * Design Network!!!
+
+### Action Point 3
+
+* DATASET TIME

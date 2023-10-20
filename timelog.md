@@ -161,3 +161,7 @@
 * *1 hour* Meeting 5 Plan
 * *1 hour* Network Planning (More CapsNet Research)
 * *0.5 hours* Studied Keras implementation of CapsNet <https://github.com/XifengGuo/CapsNet-Keras/blob/master>
+
+### 20 Oct 2023
+
+* *0.75 horus* slides for meeting 5
