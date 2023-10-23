@@ -27,7 +27,7 @@
 15:20 - Goeduls incompleteness theorem and database relationship to capsule idea
 15:45 - Investigating Counting!
 15:50 - Concept of visual concepts - how encapsulatable are things.
-15:55 - What can be counted? 
+15:55 - What can be counted? Defining and investigating counting. 
 
 ## Meeting Notes
 
