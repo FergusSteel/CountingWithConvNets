@@ -164,4 +164,15 @@
 
 ### 20 Oct 2023
 
-* *0.75 horus* slides for meeting 5
+* *0.75 hours* slides for meeting 5
+* *2.5 hours* Meeting 5
+
+## Week 6
+
+### 23 Oct 2023
+
+* *2 hours* Dataset Planning + Demo Implementation Start
+
+### 24 Oct 2023
+
+* *3 hours* Demo Dataset Generator Almost Completed
