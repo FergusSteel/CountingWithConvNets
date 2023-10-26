@@ -13,8 +13,12 @@
 
 ## Questions
 
-* I want to demonstrate that there is some schematic encoding/represenations that goes beyond just a heat map in the capsules outputs. - Show the slides from Aurelean French guys
+* I want to demonstrate that there is some schematic encoding/represenations that goes beyond just a heat map in the capsules outputs.
 
+![Alt text](image.png)
+![Alt text](image-1.png)
+
+* Capturing these representations in a more complex environment, to demonstrate visual concept encapsulation.
 
 ## Meeting Minutes
 

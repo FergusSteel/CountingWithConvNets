@@ -176,3 +176,9 @@
 ### 24 Oct 2023
 
 * *3 hours* Demo Dataset Generator Almost Completed
+
+### 25 Oct 2023
+
+* *2 hours* Finished Dataset Generator - could still add rotation and some usability features but needs to be adapted to python files anyway
+* *0.5 hours* read Matrix Capsuyle Em routing appaer
+* *1 hour* "Counting" reserach, reading about counting in organisms.
