@@ -342,3 +342,45 @@ Are they cool? In this essay I will tell you why they are cool and hype.
 
 * https://sutdcv.github.io/Animal-Kingdom/Animal_Kingdom/pose_estimation/README_pose_estimation.html !
 * https://paperswithcode.com/dataset/mot17 !!
+
+# Further reading:
+* COVID-CAPS: A capsule network-based framework for identification of COVID-19 cases from X-ray images
+* Capsule networks for object detection in UAV imagery
+
+# Counting Reading
+
+## Use of numerical and spatial information in ordinal counting by zebrafish
+
+* Existence of the "etrapolation of numerical magintued from a given set of physical elements without resorting to the use of abstract numerical symbols" - shows an innate numerical sense is helpful in surviving
+* The four Fs - Fighting and Fleeing - evaluating danger situations, swim with larger shoals; Feeding - this ones self explanatory, more food is better;
+* Is abstract numerical abilities rooted in evolutionary anecient development of a number sense# Further reading:
+* COVID-CAPS: A capsule network-based framework for identification of COVID-19 cases from X-ray images
+* Capsule networks for object detection in UAV imagery
+
+# Counting Reading
+
+## Use of numerical and spatial information in ordinal counting by zebrafish
+
+* Existence of the "etrapolation of numerical magintued from a given set of physical elements without resorting to the use of abstract numerical symbols" - shows an innate numerical sense is helpful in surviving
+* The four Fs - Fighting and Fleeing - evaluating danger situations, swim with larger shoals; Feeding - this ones self explanatory, more food is better;
+* Is abstract numerical abilities rooted in evolutionary anecient development of a number sense
+* Also shows that animals have sense of ordinality (order)
+* Zebtrafish use ordinal information and relational distances to localize the target exits in this study
+
+## Numerical Competence in Animals: Definitional issues, current evidence and a new reserach agenda
+
+* Key Processes in Numerical Competence:
+  * Subitizing: rapid assignemnt of numerical tag to small quantities of items
+  * Esimtation: estimating numerical quantitiy
+  * Counting: Formal enumerative process used to indicate absolute numerical quantity of a set.
+  https://www.cambridge.org/core/services/aop-cambridge-core/content/view/6F39B8EADE45F7BEEFC034AB09AF4932/S0140525X00053437a.pdf/numerical-competence-in-animals-definitional-issues-current-evidence-and-a-new-research-agenda.pdf
+* Also shows that animals have sense of ordinality (order)
+* Zebtrafish use ordinal information and relational distances to localize the target exits in this study
+
+## Numerical Competence in Animals: Definitional issues, current evidence and a new reserach agenda
+
+* Key Processes in Numerical Competence:
+  * Subitizing: rapid assignemnt of numerical tag to small quantities of items
+  * Esimtation: estimating numerical quantitiy
+  * Counting: Formal enumerative process used to indicate absolute numerical quantity of a set.
+  https://www.cambridge.org/core/services/aop-cambridge-core/content/view/6F39B8EADE45F7BEEFC034AB09AF4932/S0140525X00053437a.pdf/numerical-competence-in-animals-definitional-issues-current-evidence-and-a-new-research-agenda.pdf
