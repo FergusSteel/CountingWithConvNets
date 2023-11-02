@@ -1,6 +1,5 @@
 import numpy as np
 import subprocess
-import imageio
 import os
 import os.path as ospath
 import matplotlib.pyplot as plt
@@ -65,18 +64,20 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
     vals = np.arange(0,10)
     parts = np.cumsum(partitions)
 
+    lab = 0
+
     for dig in range(num_digits):
         lab = np.random.choice(vals, 1, p=prob_density)[0]
         # Select random digit with that lab
         max_idx = parts[lab]
 
-    min_idx = 0
-    if lab != 0:
-        min_idx = parts[lab-1]
+        min_idx = 0
+        if lab != 0:
+            min_idx = parts[lab-1]
 
 
-    rand_idx = np.random.randint(min_idx, max_idx)
-    idxs.append(rand_idx)
+        rand_idx = np.random.randint(min_idx, max_idx)
+        idxs.append(rand_idx)
 
     # Place each image on canvas,
     centroid_dict = {}
@@ -127,6 +128,7 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
     # Save image
     fig.set_facecolor('black')
     fig.savefig(f'x/{fname}.png', transparent=False)
+    plt.close()
 
     # Save mapping
     with open(f"y/{fname}.csv", 'w', newline='') as f:

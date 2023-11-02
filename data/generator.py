@@ -1,5 +1,6 @@
 from utils import *
 import argparse
+from tqdm import tqdm
 
 # ARG PARSING
 def pars_cfg():
@@ -8,7 +9,7 @@ def pars_cfg():
         description = "Generation Config for Multi-MNIST dataset.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-
+    parser.add_argument("--train", type=int, default=1, help="Use training distribution (1) or test (0)")
     parser.add_argument("--num_images", type=int, default=10000, required=True, help="Number of images to generate.")
     parser.add_argument("--min_n", type=int, default=0, help="Max number of digits in each image.")
     parser.add_argument("--max_n", type=int, default=16, help="Min number of digits in each image.")
@@ -22,9 +23,10 @@ def pars_cfg():
     return cfg
 
 # Config will contain the parameters to alter the max digits, variance, density, scale and probability of the images - pulled from argparser most likely
-def generator(config, train=1):
+def generator(config):
     train,test = load_mnist()
-    if train == 1:
+
+    if config.train == 1:
         images, labels = train
     else:
         images, labels = test
@@ -42,11 +44,16 @@ def generator(config, train=1):
     scale_var_prob=config.scale_var_prob
     scale_var_amount=config.scale_var_amount
 
-    for i in range(num_images):
+    for i in tqdm(range(2734, num_images)):
         # Select the amount of digits in an image
         n = np.random.randint(min_n, max_n + 1)
         generate_map_config(images, labels, partitions, i, n, min_distance, prob_density, scale_var_prob, scale_var_amount)
 
 
 if __name__ == "__main__":
-    print(0)
+    config = pars_cfg()
+    assert config.min_distance > 14 and config.min_distance < 40
+    assert config.max_n < 32
+    assert np.sum(config.prob_density) == 1.0
+    
+    generator(config)
