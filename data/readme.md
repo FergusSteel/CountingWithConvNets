@@ -1,6 +1,9 @@
 ## Data
 Keep your data (e.g. from evaluations here)
 
+The data for this evaluation exists in a zip file here:
+* https://drive.google.com/file/d/1hpTTmyCKMNs3zKCGBm8DHUNjYs8jBBoP/view?usp=sharing
+
 
 * If you involved human subjects in any form, you will require ethical permission.
     * Keep records of all items related to ethics in `data/ethics`. There are templates for scripts, guidance provided.
