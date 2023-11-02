@@ -182,3 +182,21 @@
 * *2 hours* Finished Dataset Generator - could still add rotation and some usability features but needs to be adapted to python files anyway
 * *0.5 hours* read Matrix Capsuyle Em routing appaer
 * *1 hour* "Counting" reserach, reading about counting in organisms.
+
+### 26 Oct 2023
+
+* *1 hour* Meeting 6 Prep, planning pilot study.
+
+### 27 Oct 2023
+
+* *0.5 hours* Meeting 6 Prep
+
+## Week 7
+
+### 1 Nov 2023
+
+* *2 hours* Conversion to .npy files (this is a failure, because I used wrong data type and need to cast it to a smaller datatype and ensure that it stays as fine grained as I need it to)
+
+### 2 Nov 2023
+
+* *1 hour* began coding pilot study, using CNNs in order to counter and contrast.
