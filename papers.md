@@ -371,7 +371,7 @@ Are they cool? In this essay I will tell you why they are cool and hype.
 
 * Key Processes in Numerical Competence:
   * Subitizing: rapid assignemnt of numerical tag to small quantities of items
-  * Esimtation: estimating numerical quantitiy
+  * Esimtation: estimating numerical quantity
   * Counting: Formal enumerative process used to indicate absolute numerical quantity of a set.
   https://www.cambridge.org/core/services/aop-cambridge-core/content/view/6F39B8EADE45F7BEEFC034AB09AF4932/S0140525X00053437a.pdf/numerical-competence-in-animals-definitional-issues-current-evidence-and-a-new-research-agenda.pdf
 * Also shows that animals have sense of ordinality (order)
@@ -381,6 +381,13 @@ Are they cool? In this essay I will tell you why they are cool and hype.
 
 * Key Processes in Numerical Competence:
   * Subitizing: rapid assignemnt of numerical tag to small quantities of items
-  * Esimtation: estimating numerical quantitiy
+  * Esimtation: estimating larger numerical quantitiy
   * Counting: Formal enumerative process used to indicate absolute numerical quantity of a set.
-  https://www.cambridge.org/core/services/aop-cambridge-core/content/view/6F39B8EADE45F7BEEFC034AB09AF4932/S0140525X00053437a.pdf/numerical-competence-in-animals-definitional-issues-current-evidence-and-a-new-research-agenda.pdf
+
+## Why Humans Can Count Large Quantities Accurately
+
+* Counting typically refers to explicit  counting, i.e selcting an object, assuming it is countable and then using positive integers to quantify.
+* There is no equivalent, in regards to the principles of cardinality and ordinality, that exists in other animals.
+* Subitization, i.e. counting at a glance, is limited but does not require explicit enumeration.
+* Animals have evolved to count as they must be able to quantify if benefits outweigh costs. Think in a social context, where bigger group will beat smaller group. Think lionesse example, where they use both internal numerical representation and their percepted numerical estimation to make decisions. (subitizing)
+* Esimtation ability has been shown in many animal species, think shoal estimation in fish (prey and predators)

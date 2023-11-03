@@ -2,9 +2,9 @@
 
 ## Meeting Description
 
-**Date/Time:** 27/10/2023
+**Date/Time:** 27/10/2023 14:00:00
 **Meeting Number:** \#06
-**Meeting Location** Cancelled
+**Meeting Location** In-Person
 
 ## Progress Made
 
