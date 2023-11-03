@@ -14,14 +14,14 @@ def create_density_gaussian(points):
         for coord in coords:
             map[i][int(coord[1])//4][int(coord[0])//4] = 1
     
-        map[i] = gaussian_filter(map[i], sigma=2)
+        map[i] = np.flipud(gaussian_filter(map[i], sigma=2))
     
     return map
     
 
 # Read each CSV file and create density maps
 def read_csv(n):
-    filename = f"train/y/y/{n}.csv"
+    filename = f"y/{n}.csv"
     parent_directory = os.path.abspath('..')  # Get the absolute path of the parent directory
     file_path = os.path.join(parent_directory, 'data', 'train', 'y', f"{n}.csv")  # Specify the relative path to your file
 
@@ -44,12 +44,13 @@ def read_csv(n):
 
 # Show density map ontop of image
 def show_density_map(n):
-    img = mpimg.imread(f"train/x/{n}.png")
-    density_map = np.load(f"train/y/{n}.npy")
+    img = mpimg.imread(f"x/{n}.png")
+    density_map = np.load(f"y/{n}.npy")
     plt.imshow(img, alpha=1)
-    plt.imshow(np.flipud(sum(density_map)), cmap='gray', alpha=0.5, extent=[0, 256, 256, 0])
+    plt.imshow(sum(density_map), cmap='gray', alpha=0.5, extent=[0, 256, 256, 0])
     plt.show()
 
+np.save("y/3.npy", create_density_gaussian(read_csv(3)))
 show_density_map(3)
-density_map = np.load(f"train/y/3.npy")
+density_map = np.load(f"y/3.npy")
 print(sum(sum(sum(density_map))))
