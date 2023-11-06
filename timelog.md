@@ -200,3 +200,7 @@
 ### 2 Nov 2023
 
 * *1 hour* began coding pilot study, using CNNs in order to counter and contrast.
+
+### 3 Nov 2023
+
+* *2.5 hours* Meeting 7
