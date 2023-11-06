@@ -49,7 +49,3 @@ def show_density_map(n):
     plt.imshow(img, alpha=1)
     plt.imshow(sum(density_map), cmap='gray', alpha=0.5, extent=[0, 256, 256, 0])
     plt.show()
-
-show_density_map(3)
-density_map = np.load(f"train/y/3.npy")
-print(sum(sum(sum(density_map))))
