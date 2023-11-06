@@ -44,7 +44,7 @@ def generator(config):
     scale_var_prob=config.scale_var_prob
     scale_var_amount=config.scale_var_amount
 
-    for i in tqdm(range(2734, num_images)):
+    for i in tqdm(range(0, num_images)):
         # Select the amount of digits in an image
         n = np.random.randint(min_n, max_n + 1)
         generate_map_config(images, labels, partitions, i, n, min_distance, prob_density, scale_var_prob, scale_var_amount)

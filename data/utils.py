@@ -127,11 +127,11 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
 
     # Save image
     fig.set_facecolor('black')
-    fig.savefig(f'x/{fname}.png', transparent=False)
+    fig.savefig(f'train/x/{fname}.png', transparent=False)
     plt.close()
 
     # Save mapping
-    with open(f"y/{fname}.csv", 'w', newline='') as f:
+    with open(f"train/y/{fname}.csv", 'w', newline='') as f:
         writer = csv.writer(f)
         for i in range(10):
             # Flatten the coordinates list and convert them to strings
