@@ -34,15 +34,18 @@ def conv_model():
             tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same'),
             tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
             tf.keras.layers.Conv2D(10, (1, 1), activation='sigmoid'),
+            tf.keras.layers.Reshape((10,64,64))
     ]) 
     return model
 
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+# def loss_function(y_true, y_predict):
+#     for map in batch
 
-model = conv_model()
-print(model.summary())
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-# x, y = load_batch(100)
-# #model.fit(x, y, epochs=5, batch_size=32)
+# model = conv_model()
+# print(model.summary())
+# model.compile(optimizer='adam', loss='mean_squared_error', metrics=['accuracy'])
+# x, y = load_batch(400)
+# model.fit(x, y, epochs=1, batch_size=20)
 # a = model.predict(load_image('../data/train/x/0.png'))
-# show_density_map(0, a)
+
+# print(a[0].shape)
