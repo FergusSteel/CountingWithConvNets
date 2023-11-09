@@ -16,14 +16,14 @@ def create_density_gaussian(points):
     
         map[i] = np.flipud(gaussian_filter(map[i], sigma=2))
     
-    return map
+    return np.einsum("chw -> hwc", map)
     
 
 # Read each CSV file and create density maps
 def read_csv(n):
     filename = f"train/y/{n}.csv"
     parent_directory = os.path.abspath('..')  # Get the absolute path of the parent directory
-    file_path = os.path.join(parent_directory, 'data', 'train', 'y', f"{n}.csv")  # Specify the relative path to your file
+    file_path = os.path.join(parent_directory, 'data', 'y', f"{n}.csv")  # Specify the relative path to your file
 
     with open(file_path, "r", newline="") as f:
         csv_reader = csv.reader(f)
@@ -62,3 +62,5 @@ def load_data(num_images):
         y[i] = density_map
 
     return y        
+
+print(create_density_gaussian(read_csv(0)).shape)
