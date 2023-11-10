@@ -19,8 +19,6 @@ print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 run = wandb.init(
     # set the wandb project where this run will be logged
     project="pilot-model",
-
-    # track hyperparameters and run metadata with wandb.config
 )
 
 
