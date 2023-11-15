@@ -15,7 +15,7 @@ def create_density_gaussian(points):
         for coord in coords:
             map[i][int(coord[1])][int(coord[0])] = 1
     
-        map[i] = np.flipud(gaussian_filter(map[i], sigma=1))
+        map[i] = np.flipud(gaussian_filter(map[i], sigma=3))
     
     return map
     
@@ -49,13 +49,13 @@ def show_density_map(img, dmap):
     # file_path = os.path.join(parent_directory, 'data', 'train')
     # img = mpimg.imread(os.path.join(file_path, "x", f"{n}.png"))
     print(img.shape)
-    plt.imshow(img[0], alpha=1, cmap="gray")
-    plt.imshow(sum(dmap.detach().numpy()), cmap='gray', alpha=0.5, extent=[0, 256, 256, 0])
+    plt.imshow(img[0].cpu(), alpha=1, cmap="gray")
+    plt.imshow((dmap.cpu().detach().numpy()), cmap="plasma", alpha=0.5, extent=[0, 256, 256, 0])
     plt.show()
 
 
 def load_data(num_images):
-    y = np.zeros((num_images, 10, 256, 256))
+    y = np.zeros((num_images, 10, 256, 256), dtype=np.float16)
     print("Loading data...")
     print("This may take a while...")
     for i in tqdm(range(num_images)):
