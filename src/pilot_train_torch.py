@@ -16,11 +16,11 @@ model = TorchUNetModel(10).to(device)
 # build a model
 def train_model(model, optimiser, scheduler, epochs):     
   # get the data
-  dat = load_batch(5)
-  x_train = dat[0][:4]
-  x_test = dat[0][4:]
-  y_train = dat[1][:4]
-  y_test = dat[1][4:]
+  dat = load_batch(5000)
+  x_train = dat[0][:4000]
+  x_test = dat[0][4000:]
+  y_train = dat[1][:4000]
+  y_test = dat[1][4000:]
   best_loss = 1e10
   best_model_wts = copy.deepcopy(model.state_dict())
 
@@ -82,6 +82,12 @@ def train_model(model, optimiser, scheduler, epochs):
         best_model_wts = copy.deepcopy(model.state_dict())
         torch.save(best_model_wts, "best_model.pth")
 
+  torch.save({
+            'epoch': 0,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimiser.state_dict(),
+            }, "model.pt")
+
   print(f"Best validation loss: {best_loss}")
   model.load_state_dict(best_model_wts)
   return model
@@ -100,7 +106,8 @@ outputs = model(inputs)
 
 for i in range(5):
   show_density_map(inputs[i], outputs[i])
-  print(sum(sum(sum(outputs[i]))))
+  for j in range(10):
+    print(sum(sum(outputs[j][j])))
 
 
 # model.load_weights
