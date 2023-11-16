@@ -204,3 +204,20 @@
 ### 3 Nov 2023
 
 * *2.5 hours* Meeting 7
+
+
+# Week 8
+
+### 6 Nov 2023
+
+* *2 hours* pilot study coding, data preprocessing and initial model design 
+
+### 9 Nov 2023
+
+* *4 hours* Remade pilot study, using UNET architecutre
+
+# Week 9
+
+### 13 Nov 2023
+
+* *3 hours* Dissertation writing, Capsule Network background

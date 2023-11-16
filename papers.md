@@ -387,7 +387,19 @@ Are they cool? In this essay I will tell you why they are cool and hype.
 ## Why Humans Can Count Large Quantities Accurately
 
 * Counting typically refers to explicit  counting, i.e selcting an object, assuming it is countable and then using positive integers to quantify.
-* There is no equivalent, in regards to the principles of cardinality and ordinality, that exists in other animals.
+* There is no equivalent, in regards  to the principles of cardinality and ordinality, that exists in other animals.
 * Subitization, i.e. counting at a glance, is limited but does not require explicit enumeration.
 * Animals have evolved to count as they must be able to quantify if benefits outweigh costs. Think in a social context, where bigger group will beat smaller group. Think lionesse example, where they use both internal numerical representation and their percepted numerical estimation to make decisions. (subitizing)
 * Esimtation ability has been shown in many animal species, think shoal estimation in fish (prey and predators)
+
+## Limits to visual representational correspondence between convolutional neural networks and human brain
+
+* Evaluates representations of CNNs in visual tasks, and concludes that CNNs do not fully capture higher level visual represnetations of real world objects, and higher+lower levels of visual representations.
+* Higher level representational differenced between animate and inanimate objects shown in both CNN and brain activities
+
+
+## HMAX model: A survey
+
+* the HMAX model is a biollogically based object recognition system
+* Original HMAX model proposes a hierarchical model of "cells" that start as simple parts that are detected by simple cells and these are composited as you mvoe up the visual system.
+* ConvModels resemble this hierarchical model but do not include a notion of hyper-columns
