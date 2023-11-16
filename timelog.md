@@ -221,3 +221,11 @@
 ### 13 Nov 2023
 
 * *3 hours* Dissertation writing, Capsule Network background
+
+### 15 Nov 2023
+
+* *3 hours* Pilot training, tweaking, why wont this work!
+
+### 16 Nov 2023
+
+* *2 hours* Pilot training debugged, its working suuiiiiiii! (now just need to tweak it)
