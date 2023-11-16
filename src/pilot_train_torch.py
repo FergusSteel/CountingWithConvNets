@@ -20,11 +20,11 @@ def train_model(model, optimiser, scheduler, batch_size, epochs):
   # get the data
   n= 4500
   n_test = 1500
-  dat = load_batch(6000)
-  x_train = dat[0][:4500]
-  x_test = dat[0][4500:]
-  y_train = dat[1][:4500]
-  y_test = dat[1][4500:]
+  dat = load_batch(12000)
+  x_train = dat[0][:9000]
+  x_test = dat[0][9000:]
+  y_train = dat[1][:9000]
+  y_test = dat[1][9000:]
   best_loss = 1e10
   best_model_wts = copy.deepcopy(model.state_dict())
 
@@ -96,6 +96,7 @@ def train_model(model, optimiser, scheduler, batch_size, epochs):
             'epoch': 0,
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimiser.state_dict(),
+            'best_model_wts': best_model_wts
             }, "model.pt")
 
   print(f"Best validation loss: {best_loss}")
@@ -106,11 +107,13 @@ def train_model(model, optimiser, scheduler, batch_size, epochs):
 # compile the model
 optimiser = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=0.0001)
 lr_schedule = lr_scheduler.StepLR(optimiser, step_size=30, gamma=0.1)
-# model = train_model(model, optimiser, lr_schedule, 1, 5)
+# model = train_model(model, optimiser, lr_schedule, 1, 10)
 # model.eval()
 
-checkpoint = torch.load("model_OMG_OMG.pt")
-model.load_state_dict(checkpoint['model_state_dict'])
+# checkpoint = torch.load("model.pt")
+# model.load_state_dict(checkpoint['model_state_dict'])
+
+model.load_state_dict(torch.load("best_model.pth"))
 
 dat = load_batch(5)
 
@@ -118,8 +121,9 @@ inputs = torch.from_numpy(dat[0]).float().to(device)
 outputs = model(inputs)
 
 for i in range(5):
+  print(sum(sum(sum(outputs.cpu().detach().numpy()[i]))))
+  show_density_map(inputs[i], sum(outputs[i]))
   for j in range(10):
-    show_density_map(inputs[i], outputs[i][j])
     print(sum(sum(dat[1][i][j])) / 100)
     print(sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100)
 
