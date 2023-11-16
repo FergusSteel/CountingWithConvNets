@@ -157,3 +157,7 @@ cython_debug/
 *.png
 *.npy
 *.npz
+
+# Model Weights, there will be links on rep
+*.pt
+*.pth
