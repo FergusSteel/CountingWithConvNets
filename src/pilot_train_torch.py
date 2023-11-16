@@ -18,21 +18,22 @@ model = TorchUNetModel(10).to(device)
 # build a model
 def train_model(model, optimiser, scheduler, batch_size, epochs):     
   # get the data
-  n= 1600
-  n_test = 400
-  dat = load_batch(2000)
-  x_train = dat[0][:1600]
-  x_test = dat[0][1600:]
-  y_train = dat[1][:1600]
-  y_test = dat[1][1600:]
+  n= 4500
+  n_test = 1500
+  dat = load_batch(6000)
+  x_train = dat[0][:4500]
+  x_test = dat[0][4500:]
+  y_train = dat[1][:4500]
+  y_test = dat[1][4500:]
   best_loss = 1e10
   best_model_wts = copy.deepcopy(model.state_dict())
 
   for epoch in range(epochs):
-    print(f"Epoch ({epoch}/{epochs})")
+    print(f"Epoch ({epoch+1}/{epochs})")
     print()
 
-    for phase in ["train", "validation"]:
+    for phase in (["train", "val"]):
+      print(phase)
       if phase == "train":
         for param_group in optimiser.param_groups:
           print("LR", param_group['lr'])
@@ -55,18 +56,19 @@ def train_model(model, optimiser, scheduler, batch_size, epochs):
             outputs = model(inputs)
             #print(outputs.shape, ground_truth.shape)
             loss = torch.nn.functional.mse_loss(outputs, ground_truth)
-            print(loss)
+            
             loss.backward()
             optimiser.step()
-            scheduler.step()
+            
 
           epoch_samples += batch_size
 
           history["loss"] = loss.item()
-
+        scheduler.step()
+        print(loss)
         print(history, epoch_samples, phase)
         epoch_loss = history["loss"] / epoch_samples
-      elif phase == "val":
+      if phase == "val":
         for test_batch in range((n_test//batch_size)-1):
           inputs = torch.from_numpy(x_test[test_batch*batch_size:batch_size*(test_batch+1)]).float().to(device)
           ground_truth = torch.from_numpy(y_test[test_batch*batch_size:batch_size*(test_batch+1)]).float().to(device)
@@ -103,11 +105,11 @@ def train_model(model, optimiser, scheduler, batch_size, epochs):
 
 # compile the model
 optimiser = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=0.0001)
-lr_schedule = lr_scheduler.StepLR(optimiser, step_size=30, gamma=0.5)
-#model = train_model(model, optimiser, lr_schedule, 32, 5)
-#model.eval()
+lr_schedule = lr_scheduler.StepLR(optimiser, step_size=30, gamma=0.1)
+# model = train_model(model, optimiser, lr_schedule, 1, 5)
+# model.eval()
 
-checkpoint = torch.load("model.pt")
+checkpoint = torch.load("model_OMG_OMG.pt")
 model.load_state_dict(checkpoint['model_state_dict'])
 
 dat = load_batch(5)
@@ -117,9 +119,9 @@ outputs = model(inputs)
 
 for i in range(5):
   for j in range(10):
-    show_density_map(inputs[i], outputs[i][j]*100)
-    print(sum(sum(dat[1][i][j])))
-    print(sum(sum(outputs.cpu().detach().numpy()[i][j])))
+    show_density_map(inputs[i], outputs[i][j])
+    print(sum(sum(dat[1][i][j])) / 100)
+    print(sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100)
 
 
 # model.load_weights
