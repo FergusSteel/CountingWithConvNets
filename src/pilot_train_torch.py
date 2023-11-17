@@ -1,4 +1,3 @@
-import wandb
 import numpy as np
 import os
 import torch
@@ -115,23 +114,22 @@ lr_schedule = lr_scheduler.StepLR(optimiser, step_size=30, gamma=0.1)
 
 model.load_state_dict(torch.load("best_model.pth"))
 
-dat = load_batch(5)
+dat = load_batch(10)
 
 inputs = torch.from_numpy(dat[0]).float().to(device)
 outputs = model(inputs)
 
-for i in range(5):
-  print(sum(sum(sum(outputs.cpu().detach().numpy()[i]))))
-  show_density_map(inputs[i], sum(outputs[i]))
-  for j in range(10):
-    print(sum(sum(dat[1][i][j])) / 100)
-    print(sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100)
-
-
-# model.load_weights
-# https://openaccess.thecvf.com/content_ECCV_2018/papers/Haroon_Idrees_Composition_Loss_for_ECCV_2018_paper.pdf training hyperparams from here
-# a = model.predict(load_image('../data/train/x/0.png'))
-# show_density_map(0, a)
-
-# [optional] finish the wandb run, necessary in notebooks
-#wandb.finish()
+def show_n_example(n):
+  for i in range(n):
+    print(f"Image Number {i+1}:")
+    print("-"*10)
+    print(f"True image count: {round(sum(sum(sum(dat[1][i]))) / 100)}")
+    print(f"Predicted image count: {round(sum(sum(sum(outputs.cpu().detach().numpy()[i]))) / 100)}")
+    for j in range(10):
+      print("-"*10)
+      print(f"Count for Digit {j}: True {round(sum(sum(dat[1][i][j])) / 100)}, Predicted: {(sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100):.2f}")
+      print(f"Confidence Error (True Count - Predicted Count): {(sum(sum(dat[1][i][j])) / 100 - sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100):.2f}")
+      if i == 1 and j == 9:
+        show_density_map(inputs[i], outputs[i][j])
+    
+    show_density_map(inputs[i], sum(outputs[i]))
