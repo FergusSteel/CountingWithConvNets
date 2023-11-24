@@ -48,8 +48,8 @@ def show_density_map(img, dmap):
     # parent_directory = os.path.abspath('..')  # Get the absolute path of the parent directory
     # file_path = os.path.join(parent_directory, 'data', 'train')
     # img = mpimg.imread(os.path.join(file_path, "x", f"{n}.png"))
-    plt.imshow(img[0].cpu(), alpha=1, cmap="gray")
-    plt.imshow((dmap.cpu().detach().numpy()), cmap="plasma", alpha=0.5, extent=[0, 256, 256, 0])
+    plt.imshow(img, alpha=1, cmap="gray")
+    plt.imshow((dmap), cmap="plasma", alpha=0.5, extent=[0, 256, 256, 0])
     plt.show()
 
 
