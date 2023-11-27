@@ -11,6 +11,8 @@ import torch
 import visdom
 import numpy as np
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 class AverageMeter(object):
     """
     Computes and stores the average and current value
@@ -42,21 +44,18 @@ def compute_acc(predict,target,vis):
     predict = predict != target
     acc = torch.sum(predict).float() / torch.numel(target.data)
     return acc
+
 def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
     batch_time = AverageMeter()
     losses = AverageMeter()
     accs = AverageMeter()
     model.train()
     end = time.time()
-    vis=visdom.Visdom()
-    for batch_index,(data,target) in enumerate(loader):
-
-
-        data = data.cuda()
-        target[target >= 1] = 1
-        target = target.float()
-        target = target.cuda()
-        output = model(data)
+    vis=visdom.Visdom(port=8097, server="http://localhost")
+    for batch_index, data in enumerate(loader):
+        inputs = data["image"]
+        target = data["dmap"]
+        output = model(inputs)
 
         loss = compute_loss(output, target)
 
@@ -67,7 +66,7 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         loss.backward()
 
         optimizer.step()
-        vis.image(data[0].cpu().numpy(), env='show', win='img', opts=dict(title='img'))
+        vis.image(inputs[0].cpu().numpy(), env='show', win='img', opts=dict(title='img'))
         vis.image(target[0].cpu().float().numpy(), env='show', win='target', opts=dict(title='target'))
         acc=compute_acc(output.detach(),target,vis)
         accs.update(acc)
@@ -92,7 +91,7 @@ def test_epoch(model,loader,epoch,n_epochs):
 
     # Model on eval mode
     model.eval()
-    vis = visdom.Visdom()
+    vis = visdom.Visdom(port=8097, server="http://localhost")
     with torch.no_grad():
         end = time.time()
         for batch_index,(data,target) in enumerate(loader):
@@ -128,7 +127,7 @@ def train(args, model,train_loader, decreasing_lr, wd=0.0001, momentum=0.9, ):
     if args.seed is not None:
         torch.manual_seed(args.seed)
 
-    vis = visdom.Visdom()
+    vis = visdom.Visdom(port=8097, server="http://localhost")
     vis.close(env=args.model)
     test_acc_logger = VisdomPlotLogger('line', env=args.model, opts={'title': 'Test Accuracy'})
     test_loss_logger = VisdomPlotLogger('line', env=args.model, opts={'title': 'Test Loss'})
@@ -137,8 +136,7 @@ def train(args, model,train_loader, decreasing_lr, wd=0.0001, momentum=0.9, ):
     lr_logger = VisdomPlotLogger('line', env=args.model, opts={'title': 'Learning Rate'})
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=decreasing_lr,
-                                                     gamma=0.1)
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=decreasing_lr, gamma=0.1)
     best_train_loss = 10
     for epoch in range(args.nepoch):
         scheduler.step()

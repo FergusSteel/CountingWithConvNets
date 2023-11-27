@@ -27,10 +27,14 @@ class SpreadMNISTDataset(Dataset):
         image = mpimg.imread(os.path.join(img_path,f"{idx}.png"))
         dmap = self.dmaps[idx]
 
-        sample = {'image': image, 'dmap': dmap}
+        sample = {'image': torch.from_numpy(image), 'dmap': torch.from_numpy(dmap)}
 
         if self.transform:
             sample = self.transform(sample)
         
         return sample
     
+# train_loader = DataLoader(dataset=SpreadMNISTDataset(5), batch_size=1)
+
+# for a in SpreadMNISTDataset(1):
+#     print(a["dmap"])
