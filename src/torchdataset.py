@@ -6,6 +6,8 @@ import convert_to_npz
 from torch.utils.data import Dataset, DataLoader
 import warnings
 import matplotlib.image as mpimg
+import cv2
+from matplotlib.colors import rgb_to_hsv
 
 warnings.filterwarnings("ignore")
 
@@ -14,6 +16,7 @@ class SpreadMNISTDataset(Dataset):
     def __init__(self, num_points, transform=None):
         self.transform = transform
         self.dmaps = convert_to_npz.load_data(num_points)
+        
     
 
     def __len__(self):
@@ -24,7 +27,8 @@ class SpreadMNISTDataset(Dataset):
             idx = idx.tolist()
 
         img_path = os.path.join(os.path.abspath(".."), "data", "train", "x")
-        image = mpimg.imread(os.path.join(img_path,f"{idx}.png"))
+        image = cv2.imread(os.path.join(img_path,f"{idx}.png"), 0)
+        #image = rgb_to_hsv(image)[:, :, 2]
         dmap = self.dmaps[idx]
 
         sample = {'image': torch.from_numpy(image), 'dmap': torch.from_numpy(dmap)}
