@@ -62,8 +62,9 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         
 
         output = model(inputs)
-
-        loss = compute_loss(output, target)
+        #print(output.shape, target.shape)
+        #loss = compute_loss(output, target)
+        loss = torch.nn.functional.mse_loss(output, target.squeeze())
 
         batch_size = target.size(0)
         losses.update(loss.data, batch_size)
@@ -103,7 +104,8 @@ def test_epoch(model,loader,epoch,n_epochs):
             target = data["dmap"].float().to(device)
             output = model(inputs)
 
-            loss = compute_loss(output, target)
+            #loss = compute_loss(output, target)
+            loss = torch.nn.functional.mse_loss(output, target.squeeze())
 
             batch_size = target.size(0)
             losses.update(loss.data, batch_size)

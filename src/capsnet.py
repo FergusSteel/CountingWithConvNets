@@ -66,40 +66,10 @@ class SegCaps(nn.Module):
         x=torch.cat((x,skip_1),1)
         x=self.step_10(x)
         x.squeeze_(1)
-        v_lens = self.compute_vector_length(x)
-        v_lens=v_lens.squeeze(1)
+        x=self.conv_2(x)
+        # x = x.squeeze_(1)
+        #print("A", x.shape)
+        v_lens = torch.norm(x, p=2, dim=0)
+        v_lens = v_lens.unsqueeze(0)
+        #print("B", v_lens.shape)
         return v_lens
-        
-    def compute_vector_length(self, x):
-        out = (x.pow(2)).sum(1, True)+1e-9
-        out=out.sqrt()
-        return out
-
-
-def test():
-    import os
-    os.environ['CUDA_VISIBLE_DEVICES'] = '6'
-    model = SegCaps()
-    model = model.cuda()
-    print(model)
-    c = input('s')
-    a = torch.ones(1, 1, 256, 256)
-    a = a.cuda()
-    b = model(a)
-    print(b)
-    c=b.sum()
-    print(c)
-    c.backward()
-    for k,v in model.named_parameters():
-        a=input('s')
-        print(v.grad,k)
-    # from tensorboardX import SummaryWriter
-    # with SummaryWriter(comment='LeNet') as w:
-    #     w.add_graph(model, a)
-    print(b.shape)
-    print(b)
-#test()
-def compute_vector_length( x):
-    out = (x.pow(2)).sum(1, True)+1e-9
-    out.sqrt_()
-    return out
