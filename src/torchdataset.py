@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore")
 
 
 class SpreadMNISTDataset(Dataset):
-    def __init__(self, num_points, transform=None):
+    def __init__(self, num_points, train=True, transform=None):
         self.transform = transform
         self.dmaps = convert_to_npz.load_data(num_points)
         
@@ -25,8 +25,10 @@ class SpreadMNISTDataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-
-        img_path = os.path.join(os.path.abspath(".."), "data", "train", "x")
+        if self.train:
+            img_path = os.path.join(os.path.abspath(".."), "data", "train", "x")
+        else:
+            img_path = os.path.join(os.path.abspath(".."), "data", "test", "x")
         image = cv2.imread(os.path.join(img_path,f"{idx}.png"), 0)
         #image = rgb_to_hsv(image)[:, :, 2]
         dmap = self.dmaps[idx]
