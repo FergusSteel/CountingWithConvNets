@@ -1,6 +1,9 @@
-from utils import *
+from utils_mask import *
 import argparse
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+import csv
+import os
 
 # ARG PARSING
 def pars_cfg():
@@ -35,6 +38,7 @@ def generator(config):
     images, labels = augment_dataset(images, labels)
     partitions = get_mnist_partitions(labels)[1]
 
+
     # Fetch from config
     num_images=config.num_images
     min_n = config.min_n
@@ -57,3 +61,42 @@ if __name__ == "__main__":
     assert np.sum(config.prob_density) == 1.0
     
     generator(config)
+
+
+    # Test drawing:
+    def read_csv(n):
+        file_path = os.path.join("mask", f"{n}.csv")  # Specify the relative path to your file
+
+        with open(file_path, "r", newline="") as f:
+            csv_reader = csv.reader(f)
+            i = 0
+            masks = []
+            for row in csv_reader:
+                masks.append([])
+                skipval = 0
+                for value in row:
+                    if skipval == 0:
+                        skipval = 1
+                        continue
+                    masks[i].append(value)
+                    print(type(value))
+                masks[i] = np.array(masks[i])
+                i += 1
+
+        return masks
+    
+
+    # Show density map ontop of image
+    def show_density_map(img, dmap):
+        # parent_directory = os.path.abspath('..')  # Get the absolute path of the parent directory
+        # file_path = os.path.join(parent_directory, 'data', 'train')
+        # img = mpimg.imread(os.path.join(file_path, "x", f"{n}.png"))
+        #print(dmap)
+        #print(dmap)
+        plt.imshow(img, alpha=1, cmap="gray")
+        plt.imshow((dmap), cmap="plasma", alpha=1, extent=[0, 256, 256, 0])
+        plt.show()
+
+
+    #dmap = read_csv(0)
+    show_density_map(plt.imread("mask/0.png"), np.load("mask/0.npy", allow_pickle=True)[0][0])

@@ -6,6 +6,17 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import csv
 
+ 
+def show_density_map(img, dmap):
+        # parent_directory = os.path.abspath('..')  # Get the absolute path of the parent directory
+        # file_path = os.path.join(parent_directory, 'data', 'train')
+        # img = mpimg.imread(os.path.join(file_path, "x", f"{n}.png"))
+        #print(dmap)
+        #print(dmap)
+        plt.imshow(img, alpha=1, cmap="gray")
+        plt.imshow((dmap), cmap="plasma", alpha=0.5, extent=[0, 256, 256, 0])
+        plt.show()
+
 # Generate #num_points amount of points with min_distance pixels between them
 def generate_points(num_points=12, canvas_size=(128,128), min_distance=20):
     points = []
@@ -54,7 +65,10 @@ def augment_dataset(images, labels):
 # Generatate a Mask of a placed digit
 def generate_mask(preimg, postimg):
     mask = postimg - preimg
-    return mask
+    mask[mask > 0] = 1.0
+    mask[mask <= 0] = 0.0
+    show_density_map(plt.imread("mask/0.png"), postimg)
+    return postimg
     
 def generate_map_config(images, labels, partitions, fname="output", num_digits=24, min_distance=28, prob_density=[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], scale_var_prob=0, scale_var_amount=0, rot_var_prob=0, rot_var_deg=0):
     # Generate Coordinates on 256x256 map (leave border at edge)
@@ -87,7 +101,7 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
     # Place each image on canvas,
     centroid_dict = {}
     for idx, x, y in zip(idxs, xs, ys):
-        preimg = FigureCanvasAgg(fig)
+        preimg = np.zeros((256,256))
         img = images[idx]
         lab = labels[idx]
         # Check if Scaled/Rotated
@@ -104,12 +118,15 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
         if scale:
             centroid = (x + ((img.shape[0]*scale_amount_instance)//2), y + ((img.shape[1]*scale_amount_instance)//2))
             ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0]*scale_amount_instance, y, y + img.shape[1]*scale_amount_instance))
-            postimg = FigureCanvasAgg(fig)
+            postimg = np.zeros((256,256))
+            postimg[x:x + img.shape[0]*scale_amount_instance, y: y + img.shape[1]*scale_amount_instance] = img.squeeze()
             #ax.plot(x + (img.shape[0]*scale_amount_instance)//2, y + (img.shape[1]*scale_amount_instance)//2, 'ro')
         else:
             centroid = (x + img.shape[0]//2, y + img.shape[1]//2)
             ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0], y, y + img.shape[1]))
-            postimg = FigureCanvasAgg(fig)
+            postimg = np.zeros((256,256))
+            postimg[x:x + img.shape[0], y: y + img.shape[1]] = img.squeeze()
+            print(sum(sum(postimg)))
             #ax.plot(x + (img.shape[0]//2), y + (img.shape[1]//2), 'ro')
 
         # Construct Dictionary of centroids of objects
@@ -128,15 +145,16 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
     fig.savefig(f'mask/{fname}.png', transparent=False)
     plt.close()
 
+    masks = [[]] * 10
+    for i in range(10):
+        # Flatten the coordinates list and convert them to strings
+        if i in centroid_dict.keys():
+            masks[i] = [mask.tolist() for (pt),mask in centroid_dict[i]]
+        # else:
+        #     masks[i] = []
+        # Write the key and coordinates as a single row
+        
     # Save mapping
-    with open(f"mask/{fname}.csv", 'w', newline='') as f:
-        writer = csv.writer(f)
-        for i in range(10):
-            # Flatten the coordinates list and convert them to strings
-            if i in centroid_dict.keys():
-                masks = [f"{mask}" for x,x,mask in centroid_dict[i]]
-            else:
-                coordinates = []
-            # Write the key and coordinates as a single row
-            row = [i] + coordinates
-            writer.writerow(row)
+    np.save(f"mask/{fname}.npy", masks)
+
+    
