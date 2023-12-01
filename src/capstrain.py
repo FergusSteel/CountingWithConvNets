@@ -62,9 +62,9 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         
 
         output = model(inputs)
-        #print(output.shape, target.shape)
+        print(output.shape, target.shape)
         #loss = compute_loss(output, target)
-        loss = torch.nn.functional.mse_loss(output, target.squeeze())
+        loss = torch.nn.functional.mse_loss(output[0], target.squeeze())
 
         batch_size = target.size(0)
         losses.update(loss.data, batch_size)
@@ -105,8 +105,7 @@ def test_epoch(model,loader,epoch,n_epochs):
             output = model(inputs)
 
             #loss = compute_loss(output, target)
-            loss = torch.nn.functional.mse_loss(output, target.squeeze())
-
+            loss = torch.nn.functional.mse_loss(output[0], target.squeeze())
             batch_size = target.size(0)
             losses.update(loss.data, batch_size)
             acc = compute_acc(output, target)
@@ -127,7 +126,7 @@ def test_epoch(model,loader,epoch,n_epochs):
 
 
 
-def train(args, model,train_loader, decreasing_lr, wd=0.0001, momentum=0.9):
+def train(args, model,train_loader, test_loader, decreasing_lr, wd=0.0001, momentum=0.9):
     if args.seed is not None:
         torch.manual_seed(args.seed)
 
@@ -145,7 +144,7 @@ def train(args, model,train_loader, decreasing_lr, wd=0.0001, momentum=0.9):
             n_epochs=args.nepoch,
         )
         _, test_loss,test_acc = test_epoch(
-            loader=train_loader,
+            loader=test_loader,
             model=model,
             epoch=epoch,
             n_epochs=args.nepoch,
@@ -155,9 +154,5 @@ def train(args, model,train_loader, decreasing_lr, wd=0.0001, momentum=0.9):
             print('best_loss'+str(best_train_loss))
             torch.save(model.state_dict(),args.params_name)
         print(train_loss)
-        # train_loss_logger.log(epoch, 1-float(train_loss))
-        # train_acc_logger.log(epoch,1-float(train_acc))
-        # test_acc_logger.log(epoch,1-float(test_acc))
-        # test_loss_logger.log(epoch,float(test_loss))
-        # lr_logger.log(epoch, optimizer.param_groups[0]['lr'])
+        
         wandb.log({'Epoch': epoch,'Train Loss': train_loss, 'Train Accuracy': train_acc})

@@ -148,7 +148,7 @@ def update_routing(u_hat_t_list,k,N,H_1,W_1,t_0,t_1,routing):
     #print(v.grad)
     return v
 
-def squash( p):
+def squash(p):
     p_norm_sq = (p * p).sum(-1, True)
     p_norm = (p_norm_sq + 1e-9).sqrt()
     v = p_norm_sq / (1. + p_norm_sq) * p / p_norm
