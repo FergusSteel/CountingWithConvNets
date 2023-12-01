@@ -148,7 +148,7 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
 
     # Save image
     fig.set_facecolor('black')
-    fig.savefig(f'mask/{fname}.png', transparent=False)
+    fig.savefig(f'mask/test/x/{fname}.png', transparent=False)
     plt.close()
 
     masks = []
@@ -165,10 +165,10 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
     #     for mask in masks[i]:
     #         show_density_map(plt.imread("mask/0.png"), mask)
         
-    os.makedirs(f"mask/{fname}", exist_ok=True)
+    os.makedirs(f"mask/test/y/{fname}", exist_ok=True)
     for i in range(10):
         if masks[i] != []:
             save_mask = np.sum(masks[i], axis=0)
-            np.save(f"mask/{fname}/{i}.npy", np.array(save_mask).astype(np.uint8))
+            np.save(f"mask/test/y/{fname}/{i}.npy", np.array(save_mask).astype(np.uint8))
 
     

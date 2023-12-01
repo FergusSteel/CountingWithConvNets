@@ -7,16 +7,17 @@ from torch.utils.data import Dataset, DataLoader
 import warnings
 import matplotlib.image as mpimg
 import cv2
+from tqdm import tqdm
 from matplotlib.colors import rgb_to_hsv
 
 warnings.filterwarnings("ignore")
 
 
-class SpreadMNISTDataset(Dataset):
+class MaskedSpreadMNISTDataset(Dataset):
     def __init__(self, num_points, train=True, transform=None):
         self.transform = transform
         self.train = train
-        self.dmaps = convert_to_npz.load_data(num_points)
+        self.dmaps = [convert_to_npz.read_npy(n, train) for n in tqdm(range(num_points))]
         
     
 
@@ -27,9 +28,9 @@ class SpreadMNISTDataset(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
         if self.train:
-            img_path = os.path.join(os.path.abspath(".."), "data", "train", "x")
+            img_path = os.path.join(os.path.abspath(".."), "data", "mask", "train", "x")
         else:
-            img_path = os.path.join(os.path.abspath(".."), "data", "test", "x")
+            img_path = os.path.join(os.path.abspath(".."), "data", "mask", "test", "x")
         image = cv2.imread(os.path.join(img_path,f"{idx}.png"), 0)
         #image = rgb_to_hsv(image)[:, :, 2]
         dmap = self.dmaps[idx]
@@ -41,7 +42,7 @@ class SpreadMNISTDataset(Dataset):
         
         return sample
     
-# train_loader = DataLoader(dataset=SpreadMNISTDataset(5), batch_size=1)
+# train_loader = DataLoader(dataset=MaskedSpreadMNISTDataset(5), batch_size=1)
 
-# for a in SpreadMNISTDataset(1):
+# for a in train_loader:
 #     print(a["dmap"])

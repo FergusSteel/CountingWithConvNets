@@ -41,6 +41,21 @@ def read_csv(n):
             i += 1
 
     return points
+
+def read_npy(n, train=True):
+    parent_directory = os.path.abspath('..')
+    if train:
+        file_path = os.path.join(parent_directory, "data", "mask", "train", "y")
+    else:
+        file_path = os.path.join(parent_directory, "data", "mask", "test", "y")
+    masks = np.zeros((10, 256, 256))
+    for i in range(10):
+        if os.path.isfile(os.path.join(file_path, str(n), f"{i}.npy")):
+            masks[i] = np.load(os.path.join(file_path, str(n), f"{i}.npy"))
+        else:
+            masks[i] = np.zeros((256, 256))
+    
+    return masks
     
 
 # Show density map ontop of image
@@ -54,6 +69,17 @@ def show_density_map(img, dmap):
 
 
 def load_data(num_images):
+    y = np.zeros((num_images, 10, 256, 256), dtype=np.float16)
+    print("Loading data...")
+    print("This may take a while...")
+    for i in tqdm(range(num_images)):
+        points = read_csv(i)
+        density_map = create_density_gaussian(points)
+        y[i] = density_map
+
+    return y   
+
+def load_data_masks(num_images):
     y = np.zeros((num_images, 10, 256, 256), dtype=np.float16)
     print("Loading data...")
     print("This may take a while...")
