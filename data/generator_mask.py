@@ -94,9 +94,12 @@ if __name__ == "__main__":
         #print(dmap)
         #print(dmap)
         plt.imshow(img, alpha=1, cmap="gray")
-        plt.imshow((dmap), cmap="plasma", alpha=1, extent=[0, 256, 256, 0])
+        plt.imshow((dmap), cmap="plasma", alpha=0.4, extent=[0, 256, 256, 0])
         plt.show()
 
 
     #dmap = read_csv(0)
-    show_density_map(plt.imread("mask/0.png"), np.load("mask/0.npy", allow_pickle=True)[0][0])
+    # for i in range(10):
+    #     if os.path.isfile(f"mask/0/{i}.npy"):
+    #         dmap = np.load(f"mask/0/{i}.npy")
+    #         show_density_map(plt.imread("mask/0.png"), dmap)

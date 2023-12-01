@@ -5,6 +5,7 @@ import os.path as ospath
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 import csv
+import h5py
 
  
 def show_density_map(img, dmap):
@@ -67,7 +68,7 @@ def generate_mask(preimg, postimg):
     mask = postimg - preimg
     mask[mask > 0] = 1.0
     mask[mask <= 0] = 0.0
-    show_density_map(plt.imread("mask/0.png"), postimg)
+   #show_density_map(plt.imread("mask/0.png"), postimg)
     return postimg
     
 def generate_map_config(images, labels, partitions, fname="output", num_digits=24, min_distance=28, prob_density=[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], scale_var_prob=0, scale_var_amount=0, rot_var_prob=0, rot_var_deg=0):
@@ -119,23 +120,28 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
             centroid = (x + ((img.shape[0]*scale_amount_instance)//2), y + ((img.shape[1]*scale_amount_instance)//2))
             ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0]*scale_amount_instance, y, y + img.shape[1]*scale_amount_instance))
             postimg = np.zeros((256,256))
-            postimg[x:x + img.shape[0]*scale_amount_instance, y: y + img.shape[1]*scale_amount_instance] = img.squeeze()
+            postimg[y: (y + img.shape[1]*scale_amount_instance), x:(x + img.shape[0]*scale_amount_instance)] = np.flipud(img.squeeze())
+            postimg[postimg > 0] = int(1)
+            postimg[postimg != 1] = int(0)
+            postimg = np.flipud(postimg)
             #ax.plot(x + (img.shape[0]*scale_amount_instance)//2, y + (img.shape[1]*scale_amount_instance)//2, 'ro')
         else:
             centroid = (x + img.shape[0]//2, y + img.shape[1]//2)
             ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0], y, y + img.shape[1]))
             postimg = np.zeros((256,256))
-            postimg[x:x + img.shape[0], y: y + img.shape[1]] = img.squeeze()
-            print(sum(sum(postimg)))
+            postimg[y :(y + img.shape[1]), x:(x + img.shape[0])] = np.flipud(img.squeeze())
+            postimg[postimg > 0] = int(1)
+            postimg[postimg != 1] = int(0)
+            postimg = np.flipud(postimg)
             #ax.plot(x + (img.shape[0]//2), y + (img.shape[1]//2), 'ro')
 
         # Construct Dictionary of centroids of objects
         if lab not in centroid_dict.keys():
-            centroid_dict[lab] = [(centroid, generate_mask(postimg, preimg))]
+            centroid_dict[lab] = [(centroid, postimg)]#generate_mask(postimg, preimg))]
         else:
-            centroid_dict[lab].append((centroid, generate_mask(postimg, preimg)))
+            centroid_dict[lab].append((centroid, postimg))# generate_mask(postimg, preimg)))
 
-
+    #show_density_map(plt.imread("mask/0.png"), np.flipud(postimg))
     # for centroid in centroid_dict.values():
     #   for centre in centroid:
     #     ax.plot(centre[0], centre[1], 'ro')
@@ -145,16 +151,24 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
     fig.savefig(f'mask/{fname}.png', transparent=False)
     plt.close()
 
-    masks = [[]] * 10
+    masks = []
     for i in range(10):
         # Flatten the coordinates list and convert them to strings
+        masks.append([])
         if i in centroid_dict.keys():
-            masks[i] = [mask.tolist() for (pt),mask in centroid_dict[i]]
-        # else:
-        #     masks[i] = []
+            masks[i] = [mask for (pt),mask in centroid_dict[i]]
+        else:
+            masks[i] = []
         # Write the key and coordinates as a single row
+    
+    # for i in range(10):
+    #     for mask in masks[i]:
+    #         show_density_map(plt.imread("mask/0.png"), mask)
         
-    # Save mapping
-    np.save(f"mask/{fname}.npy", masks)
+    os.makedirs(f"mask/{fname}", exist_ok=True)
+    for i in range(10):
+        if masks[i] != []:
+            save_mask = np.sum(masks[i], axis=0)
+            np.save(f"mask/{fname}/{i}.npy", np.array(save_mask).astype(np.uint8))
 
     
