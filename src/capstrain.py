@@ -4,14 +4,58 @@ import time
 import sys
 
 import torch.optim as optim
-from torchnet.logger import VisdomLogger, VisdomPlotLogger
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
 import numpy as np
+from torch.autograd import grad
+import pytorch_msssim
 
 import wandb
 wandb.init(project='SegCaps-PyTorch')
+
+## Custom Loss Function uses Dice-BinaryCrossEntropy Loss
+class DiceBCELoss(nn.Module):
+    def __init__(self, weight=None, size_average=True):
+        super(DiceBCELoss, self).__init__()
+
+    def forward(self, inputs, targets, smooth=1):
+        BCE = 0.0
+        dice_loss = 0.0
+        print(inputs.shape, targets.shape)
+        #comment out if your model contains a sigmoid or equivalent activation layer
+        #inputs = F.sigmoid(inputs)       
+        #flatten label and prediction tensors
+        l = F.sigmoid(inputs)
+        r = targets
+            
+        intersection = (l * r).sum()                            
+        dice_loss += 1 - (2.*intersection + smooth)/(l.sum() + r.sum() + smooth)  
+        BCE += F.binary_cross_entropy(l, r, reduction='mean')
+        
+        Dice_BCE = BCE + dice_loss
+        
+        return Dice_BCE
+
+class MSSLoss(nn.Module):
+    def __init__(self, weight=None, size_average=True):
+        super(MSSLoss, self).__init__()
+        self.lf = pytorch_msssim.msssim
+
+    def forward(self, y_pred, y_true, smooth=1e-5):
+        # loss = torch.tensor([])
+        loss = torch.tensor(0.0).cuda()
+        y_pred = y_pred.squeeze()
+        y_true = y_true.squeeze()
+        for cat in range(10):
+            loss += self.lf(y_pred[cat].unsqueeze(0).unsqueeze(1), y_true[cat].unsqueeze(0).unsqueeze(1))
+            print(loss)
+        
+        return 1 - torch.mean(loss)
+
+#lf = CategoricalMSELoss()
+#lf = MSSLoss()
+lf = pytorch_msssim.msssim
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -62,16 +106,16 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         
 
         output = model(inputs)
-        print(output.shape, target.shape)
         #loss = compute_loss(output, target)
-        loss = torch.nn.functional.mse_loss(output[0], target.squeeze())
+        #loss = torch.nn.functional.mse_loss(output[0], target.squeeze())
+        loss = F.mse_loss(output[0], target.squeeze()) + (1 - lf(output, target, normalize="relu"))
 
         batch_size = target.size(0)
         losses.update(loss.data, batch_size)
 
         optimizer.zero_grad()
         loss.backward()
-
+    
         optimizer.step()
         acc=compute_acc(output.detach(),target)
         accs.update(acc)
@@ -105,7 +149,10 @@ def test_epoch(model,loader,epoch,n_epochs):
             output = model(inputs)
 
             #loss = compute_loss(output, target)
-            loss = torch.nn.functional.mse_loss(output[0], target.squeeze())
+            #loss = torch.nn.functional.mse_loss(output, target)
+            #loss = lf(output[0], target.squeeze())
+            loss = F.mse_loss(output[0], target.squeeze()) + (1 - lf(output, target, normalize="relu"))
+
             batch_size = target.size(0)
             losses.update(loss.data, batch_size)
             acc = compute_acc(output, target)
@@ -154,5 +201,5 @@ def train(args, model,train_loader, test_loader, decreasing_lr, wd=0.0001, momen
             print('best_loss'+str(best_train_loss))
             torch.save(model.state_dict(),args.params_name)
         print(train_loss)
-        
+    
         wandb.log({'Epoch': epoch,'Train Loss': train_loss, 'Train Accuracy': train_acc})

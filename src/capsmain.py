@@ -71,7 +71,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size_train', type=int, default=1, help='input batch size for training (default: 160)')
     parser.add_argument('--batch_size_test', type=int, default=2, help='input batch size for testing (default: 80)')
     parser.add_argument("--n_images", type=int, default=1000, help="Number of images to train on.")
-    parser.add_argument('--lr', type=float, default=0.0001, help='learning rate (default: 1e-3)')
+    parser.add_argument('--lr', type=float, default=0.001, help='learning rate (default: 1e-3)')
     parser.add_argument('--gpu', default='0', help='index of gpus to use')
     parser.add_argument('--dlr', default='10,25', help='decreasing strategy')
     parser.add_argument('--model', default='segcaps-train', help='which model (default: xception)')
