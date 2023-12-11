@@ -1,3 +1,5 @@
+# From https://github.com/jorge-pessoa/pytorch-msssim
+
 import torch
 import torch.nn.functional as F
 from math import exp
