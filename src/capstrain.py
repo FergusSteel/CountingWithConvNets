@@ -19,23 +19,17 @@ class DiceBCELoss(nn.Module):
     def __init__(self, weight=None, size_average=True):
         super(DiceBCELoss, self).__init__()
 
-    def forward(self, inputs, targets, smooth=1):
-        BCE = 0.0
-        dice_loss = 0.0
-        print(inputs.shape, targets.shape)
-        #comment out if your model contains a sigmoid or equivalent activation layer
-        #inputs = F.sigmoid(inputs)       
-        #flatten label and prediction tensors
-        l = F.sigmoid(inputs)
-        r = targets
-            
-        intersection = (l * r).sum()                            
-        dice_loss += 1 - (2.*intersection + smooth)/(l.sum() + r.sum() + smooth)  
-        BCE += F.binary_cross_entropy(l, r, reduction='mean')
-        
-        Dice_BCE = BCE + dice_loss
-        
-        return Dice_BCE
+    def forward(self, y_pred, y_true, threshold = 0.5, smooth=1e-5):
+        #hard_dice = torch.FloatTensor()
+        y_pred = (y_pred > threshold).type(torch.FloatTensor)
+        y_true =(y_true > threshold).type(torch.FloatTensor)
+        inse = torch.sum(torch.multiply(y_pred, y_true))
+        l = torch.sum(y_pred)
+        r = torch.sum(y_true)
+
+        hard_dice = (2. * inse + smooth) / (l + r + smooth)
+    
+        return torch.mean(hard_dice).cuda()
 
 class MSSLoss(nn.Module):
     def __init__(self, weight=None, size_average=True):
@@ -86,9 +80,12 @@ def compute_loss(output, target):
     return class_loss
 
 def compute_acc(predict,target):
-    predict[predict>=0.7]=1
-    predict[predict<=0.3]=0
-    predict = predict != target
+    predict = predict[0].cpu().detach()
+    target = target[0].cpu().detach()
+    for i in range(10):
+        predict[i][predict[i]>=0.7]=1
+        predict[i][predict[i]<=0.3]=0
+        predict[i] = predict[i] != target[i]
     acc = torch.sum(predict).float() / torch.numel(target.data)
     return acc
 
@@ -108,7 +105,11 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         output = model(inputs)
         #loss = compute_loss(output, target)
         #loss = torch.nn.functional.mse_loss(output[0], target.squeeze())
-        loss = F.mse_loss(output[0], target.squeeze()) + (1 - lf(output, target, normalize="relu"))
+        loss = (10*F.mse_loss(output[0], target.squeeze())) 
+        for i in range(10):
+            t_pred_map = output[0][i][None, None, :]
+            t_true_map = target[0][i][None, None, :]
+            loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
 
         batch_size = target.size(0)
         losses.update(loss.data, batch_size)
@@ -151,7 +152,11 @@ def test_epoch(model,loader,epoch,n_epochs):
             #loss = compute_loss(output, target)
             #loss = torch.nn.functional.mse_loss(output, target)
             #loss = lf(output[0], target.squeeze())
-            loss = F.mse_loss(output[0], target.squeeze()) + (1 - lf(output, target, normalize="relu"))
+            loss = (10*F.mse_loss(output[0], target.squeeze())) 
+            for i in range(10):
+                t_pred_map = output[0][i][None, None, :]
+                t_true_map = target[0][i][None, None, :]
+                loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
 
             batch_size = target.size(0)
             losses.update(loss.data, batch_size)

@@ -81,7 +81,7 @@ if __name__ == '__main__':
     parser.add_argument('--pretrain', type=int, default='0', help='pretrain (default: 1)')
     parser.add_argument('--data_name', default='train', help='data_name (default: train)')
     parser.add_argument('--params_name', default='segcaps.pkl', help='params_name (default: segcaps.pkl)')
-    parser.add_argument('--load_params_name', default='segcapsV5_good.pkl', help='params_name (default: segcaps.pkl)')
+    parser.add_argument('--load_params_name', default='segcaps_good.pkl', help='params_name (default: segcaps.pkl)')
     args = parser.parse_args()
 
     if args.pretrain == 1:
