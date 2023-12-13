@@ -80,6 +80,7 @@
 * *2 hours* Supervisor Meeting 2
 
 ### 30 Sep 2023
+
 * *1.16 hour* Watched Geoffrey Hinton's "What is wrong with convoultional neural nets?"
 
 ## Week 3
@@ -229,3 +230,27 @@
 ### 16 Nov 2023
 
 * *2 hours* Pilot training debugged, its working suuiiiiiii! (now just need to tweak it)
+
+# Week 10
+
+### 20 Nov 2023
+
+* *3 hours* Remaking data set to include segmentation masks rather than gaussians
+
+### 21 Nov 2023
+
+* *3 hours* Retraining, tweaking, trying to get new mask network working
+
+# Week 11
+
+### 27 Nov 2023
+
+# Week 12
+
+* NO WORK DONE, Exam break
+
+# Week 13
+
+### 11 Dec 2023
+
+* *5 hours* Adapting loss function to incorporate Multiscale Structural Simularity of each density map.
