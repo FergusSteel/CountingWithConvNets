@@ -149,7 +149,7 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         #     t_pred_map = output[0][i][None, None, :]
         #     t_true_map = target[0][i][None, None, :]
         #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
-        loss += lf(output[0], target.squeeze())
+        #loss += lf(output[0], target.squeeze())
 
         batch_size = target.size(0)
         losses.update(loss.data, batch_size)
@@ -197,7 +197,7 @@ def test_epoch(model,loader,epoch,n_epochs):
             #     t_pred_map = output[0][i][None, None, :]
             #     t_true_map = target[0][i][None, None, :]
             #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
-            loss += lf(output[0], target.squeeze())
+            #loss += lf(output[0], target.squeeze())
 
             batch_size = target.size(0)
             losses.update(loss.data, batch_size)
