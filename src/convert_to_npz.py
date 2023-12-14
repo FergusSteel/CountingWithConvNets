@@ -21,10 +21,13 @@ def create_density_gaussian(points):
     
 
 # Read each CSV file and create density maps
-def read_csv(n):
-    filename = f"train/y/{n}.csv"
-    parent_directory = os.path.abspath('..')  # Get the absolute path of the parent directory
-    file_path = os.path.join(parent_directory, 'data', 'train', 'y', f"{n}.csv")  # Specify the relative path to your file
+def read_csv(n, train):
+    parent_directory = os.path.abspath('..')
+    if train:
+        file_path = os.path.join(parent_directory, 'data', 'train', 'y', f"{n}.csv") 
+    else:
+        file_path = os.path.join(parent_directory, 'data', 'test', 'y', f"{n}.csv") 
+     # Specify the relative path to your file
 
     with open(file_path, "r", newline="") as f:
         csv_reader = csv.reader(f)
@@ -68,12 +71,17 @@ def show_density_map(img, dmap):
     plt.show()
 
 
-def load_data(num_images):
+def load_data(num_images, train=True):
     y = np.zeros((num_images, 10, 256, 256), dtype=np.float16)
+    parent_directory = os.path.abspath('..')
+    if train:
+        file_path = os.path.join(parent_directory, "data", "train", "y")
+    else:
+        file_path = os.path.join(parent_directory, "data", "test", "y")
     print("Loading data...")
     print("This may take a while...")
     for i in tqdm(range(num_images)):
-        points = read_csv(i)
+        points = read_csv(i, train)
         density_map = create_density_gaussian(points)
         y[i] = density_map
 
@@ -81,6 +89,7 @@ def load_data(num_images):
 
 def load_data_masks(num_images):
     y = np.zeros((num_images, 10, 256, 256), dtype=np.float16)
+    
     print("Loading data...")
     print("This may take a while...")
     for i in tqdm(range(num_images)):

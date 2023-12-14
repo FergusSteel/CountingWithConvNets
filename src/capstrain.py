@@ -46,10 +46,50 @@ class MSSLoss(nn.Module):
             print(loss)
         
         return 1 - torch.mean(loss)
+    
+class UNET3Loss(nn.Module):
+    def __init__(self, weight=None, size_average=True):
+        super(UNET3Loss, self).__init__()
+        
+        # focal loss adapted from https://github.com/shruti-jadon/Semantic-Segmentation-Loss-Functions/blob/master/loss_functions.py
+        def focal_loss(y_true, y_pred):
+            y_pred = y_pred.clamp(1e-7, 1 - 1e-7)
+            pt = torch.where(y_true == 1, y_pred, 1 - y_pred)
+            loss = -0.25 * (1 - pt) ** 2 * torch.log(pt)
+
+            return torch.mean(loss)
+        self.focal_loss = focal_loss
+    
+        def jaccard_loss(y_true, y_pred):
+            y_true_flattened = torch.flatten(y_true)
+            y_pred_flattened = torch.flatten(y_pred)
+            intersection = torch.sum(y_true * y_pred)
+            union = (torch.sum(y_true + y_pred)) - intersection
+            loss = (intersection + 1e-7) / (union + 1e-7)
+
+            return 1 - loss
+        self.jaccard_loss = jaccard_loss
+        
+        # self simm from https://github.com/jorge-pessoa/pytorch-msssim
+        self.ssim = pytorch_msssim.msssim
+
+
+    def forward(self, y_pred, y_true, smooth=1e-5):
+        # loss = torch.tensor([])
+        loss = torch.tensor(0.0).cuda()
+        y_pred = y_pred.squeeze()
+        y_true = y_true.squeeze()
+        for cat in range(10):
+            loss += 1 - self.ssim(y_pred[cat].unsqueeze(0).unsqueeze(1), y_true[cat].unsqueeze(0).unsqueeze(1), normalize="relu")
+            loss += self.focal_loss(y_true[cat].unsqueeze(0).unsqueeze(1), y_pred[cat].unsqueeze(0).unsqueeze(1))
+            loss += self.jaccard_loss(y_true[cat].unsqueeze(0).unsqueeze(1), y_pred[cat].unsqueeze(0).unsqueeze(1))
+        
+        return loss
 
 #lf = CategoricalMSELoss()
 #lf = MSSLoss()
-lf = pytorch_msssim.msssim
+#lf = pytorch_msssim.msssim
+lf = UNET3Loss()
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -98,18 +138,18 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
     for batch_index, data in enumerate(loader):
         
         inputs = data["image"].float().to(device)
+        #print(inputs.shape)
         inputs.unsqueeze_(1)
         target = data["dmap"].float().to(device)
-        
-
         output = model(inputs)
         #loss = compute_loss(output, target)
         #loss = torch.nn.functional.mse_loss(output[0], target.squeeze())
-        loss = (10*F.mse_loss(output[0], target.squeeze())) 
-        for i in range(10):
-            t_pred_map = output[0][i][None, None, :]
-            t_true_map = target[0][i][None, None, :]
-            loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
+        loss = F.mse_loss(output[0], target.squeeze())
+        # for i in range(10):
+        #     t_pred_map = output[0][i][None, None, :]
+        #     t_true_map = target[0][i][None, None, :]
+        #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
+        loss += lf(output[0], target.squeeze())
 
         batch_size = target.size(0)
         losses.update(loss.data, batch_size)
@@ -152,11 +192,12 @@ def test_epoch(model,loader,epoch,n_epochs):
             #loss = compute_loss(output, target)
             #loss = torch.nn.functional.mse_loss(output, target)
             #loss = lf(output[0], target.squeeze())
-            loss = (10*F.mse_loss(output[0], target.squeeze())) 
-            for i in range(10):
-                t_pred_map = output[0][i][None, None, :]
-                t_true_map = target[0][i][None, None, :]
-                loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
+            loss = F.mse_loss(output[0], target.squeeze())
+            # for i in range(10):
+            #     t_pred_map = output[0][i][None, None, :]
+            #     t_true_map = target[0][i][None, None, :]
+            #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
+            loss += lf(output[0], target.squeeze())
 
             batch_size = target.size(0)
             losses.update(loss.data, batch_size)

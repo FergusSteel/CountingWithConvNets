@@ -24,17 +24,17 @@ def init(args):
     if args.cuda:
         torch.cuda.manual_seed(args.seed)
     # if args.pretrain == 1:
-    #     train_loader = DataLoader(SpreadMNISTDataset(1), batch_size=args.batch_size_train, shuffle=True)
-    #     test_loader = DataLoader(SpreadMNISTDataset(1, train=False), batch_size=args.batch_size_train, shuffle=True)
+    #     train_loader = DataLoader(MaskedSpreadMNISTDataset(1), batch_size=args.batch_size_train, shuffle=True)
+    #     test_loader = DataLoader(MaskedSpreadMNISTDataset(1, train=False), batch_size=args.batch_size_train, shuffle=True)
     # else:
-    #     train_loader = DataLoader(SpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=True)
-    #     test_loader = DataLoader(SpreadMNISTDataset(int(args.n_images*0.25), train=False), batch_size=args.batch_size_train, shuffle=True)
+    #     train_loader = DataLoader(MaskedSpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=True)
+    #     test_loader = DataLoader(MaskedSpreadMNISTDataset(int(args.n_images*0.25), train=False), batch_size=args.batch_size_train, shuffle=True)
     if args.pretrain == 1:
-        train_loader = DataLoader(MaskedSpreadMNISTDataset(1), batch_size=args.batch_size_train, shuffle=True)
-        test_loader = DataLoader(MaskedSpreadMNISTDataset(1, train=False), batch_size=args.batch_size_train, shuffle=True)
+        train_loader = DataLoader(SpreadMNISTDataset(1), batch_size=args.batch_size_train, shuffle=True)
+        test_loader = DataLoader(SpreadMNISTDataset(1, train=False), batch_size=args.batch_size_train, shuffle=True)
     else:
-        train_loader = DataLoader(MaskedSpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=True)
-        test_loader = DataLoader(MaskedSpreadMNISTDataset(int(args.n_images*0.25), train=False), batch_size=args.batch_size_train, shuffle=True)
+        train_loader = DataLoader(SpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=True)
+        test_loader = DataLoader(SpreadMNISTDataset(int(args.n_images*0.25), train=False), batch_size=args.batch_size_train, shuffle=True)
     model=SegCaps()
     model.cuda()
     model.to(device)
@@ -69,7 +69,7 @@ def show_n_example(model, n):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Little Ma's train")
     parser.add_argument('--batch_size_train', type=int, default=1, help='input batch size for training (default: 160)')
-    parser.add_argument('--batch_size_test', type=int, default=2, help='input batch size for testing (default: 80)')
+    parser.add_argument('--batch_size_test', type=int, default=1, help='input batch size for testing (default: 80)')
     parser.add_argument("--n_images", type=int, default=1000, help="Number of images to train on.")
     parser.add_argument('--lr', type=float, default=0.001, help='learning rate (default: 1e-3)')
     parser.add_argument('--gpu', default='0', help='index of gpus to use')
