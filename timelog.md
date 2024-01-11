@@ -206,8 +206,7 @@
 
 * *2.5 hours* Meeting 7
 
-
-# Week 8
+## Week 8
 
 ### 6 Nov 2023
 
@@ -217,7 +216,7 @@
 
 * *4 hours* Remade pilot study, using UNET architecutre
 
-# Week 9
+## Week 9
 
 ### 13 Nov 2023
 
@@ -231,7 +230,7 @@
 
 * *2 hours* Pilot training debugged, its working suuiiiiiii! (now just need to tweak it)
 
-# Week 10
+## Week 10
 
 ### 20 Nov 2023
 
@@ -241,16 +240,42 @@
 
 * *3 hours* Retraining, tweaking, trying to get new mask network working
 
-# Week 11
+## Week 11
 
 ### 27 Nov 2023
 
-# Week 12
+* *2 hours* started on cleaning repository and making code more readable
+
+### 28 Nov 2023
+
+* *3 hours* Visual system research, mainly dissertation readings
+
+## Week 12
 
 * NO WORK DONE, Exam break
 
-# Week 13
+## Week 13
 
 ### 11 Dec 2023
 
 * *5 hours* Adapting loss function to incorporate Multiscale Structural Simularity of each density map.
+
+### 16 Dec 2023
+
+* *1.5 hours* Wrote halfway report, planned out semester 2 work
+
+### 17 Dec 2023
+
+* *2 hours* Masking research, how to investigate capsule outputs?
+
+# Semester 2
+
+## Week 1
+
+### 9 January 2024
+
+* *2 hours* back to school, getting back into gear and figuring out where I am in the project
+
+### 11 January 2024
+
+* *3 hours* tweaking code to optimise the best-case performance.
