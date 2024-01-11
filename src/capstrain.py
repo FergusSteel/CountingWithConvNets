@@ -31,10 +31,10 @@ class DiceBCELoss(nn.Module):
     
         return torch.mean(hard_dice).cuda()
 
-class MSSLoss(nn.Module):
+class MSELoss(nn.Module):
     def __init__(self, weight=None, size_average=True):
-        super(MSSLoss, self).__init__()
-        self.lf = pytorch_msssim.msssim
+        super(MSELoss, self).__init__()
+        self.lf = nn.MSELoss()
 
     def forward(self, y_pred, y_true, smooth=1e-5):
         # loss = torch.tensor([])
@@ -43,9 +43,8 @@ class MSSLoss(nn.Module):
         y_true = y_true.squeeze()
         for cat in range(10):
             loss += self.lf(y_pred[cat].unsqueeze(0).unsqueeze(1), y_true[cat].unsqueeze(0).unsqueeze(1))
-            print(loss)
         
-        return 1 - torch.mean(loss)
+        return torch.mean(loss)
     
 class UNET3Loss(nn.Module):
     def __init__(self, weight=None, size_average=True):
@@ -76,20 +75,22 @@ class UNET3Loss(nn.Module):
 
     def forward(self, y_pred, y_true, smooth=1e-5):
         # loss = torch.tensor([])
-        loss = torch.tensor(0.0).cuda()
+        ssimloss = torch.tensor(0.0).cuda()
+        focalloss = torch.tensor(0.0).cuda()
+        jaccardloss = torch.tensor(0.0).cuda()
         y_pred = y_pred.squeeze()
         y_true = y_true.squeeze()
         for cat in range(10):
-            loss += 1 - self.ssim(y_pred[cat].unsqueeze(0).unsqueeze(1), y_true[cat].unsqueeze(0).unsqueeze(1), normalize="relu")
-            loss += self.focal_loss(y_true[cat].unsqueeze(0).unsqueeze(1), y_pred[cat].unsqueeze(0).unsqueeze(1))
-            loss += self.jaccard_loss(y_true[cat].unsqueeze(0).unsqueeze(1), y_pred[cat].unsqueeze(0).unsqueeze(1))
+            ssimloss += 1 - self.ssim(y_pred[cat].unsqueeze(0).unsqueeze(1), y_true[cat].unsqueeze(0).unsqueeze(1), normalize="relu")
+            focalloss += self.focal_loss(y_true[cat].unsqueeze(0).unsqueeze(1), y_pred[cat].unsqueeze(0).unsqueeze(1))
+            jaccardloss += self.jaccard_loss(y_true[cat].unsqueeze(0).unsqueeze(1), y_pred[cat].unsqueeze(0).unsqueeze(1))
         
-        return loss
+        return (ssimloss / 10) + (focalloss / 10) + (jaccardloss / 10)
 
 #lf = CategoricalMSELoss()
-#lf = MSSLoss()
+lf = MSELoss()
 #lf = pytorch_msssim.msssim
-lf = UNET3Loss()
+# lf = UNET3Loss()
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -149,7 +150,7 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         #     t_pred_map = output[0][i][None, None, :]
         #     t_true_map = target[0][i][None, None, :]
         #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
-        #loss += lf(output[0], target.squeeze())
+        loss += lf(output[0], target.squeeze())
 
         batch_size = target.size(0)
         losses.update(loss.data, batch_size)
@@ -197,7 +198,7 @@ def test_epoch(model,loader,epoch,n_epochs):
             #     t_pred_map = output[0][i][None, None, :]
             #     t_true_map = target[0][i][None, None, :]
             #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
-            #loss += lf(output[0], target.squeeze())
+            loss += lf(output[0], target.squeeze())
 
             batch_size = target.size(0)
             losses.update(loss.data, batch_size)
