@@ -29,12 +29,12 @@ def init(args):
     # else:
     #     train_loader = DataLoader(MaskedSpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=True)
     #     test_loader = DataLoader(MaskedSpreadMNISTDataset(int(args.n_images*0.25), train=False), batch_size=args.batch_size_train, shuffle=True)
-    if args.pretrain == 1:
-        train_loader = DataLoader(SpreadMNISTDataset(1), batch_size=args.batch_size_train, shuffle=True)
-        test_loader = DataLoader(SpreadMNISTDataset(1, train=False), batch_size=args.batch_size_train, shuffle=True)
-    else:
-        train_loader = DataLoader(SpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=True)
-        test_loader = DataLoader(SpreadMNISTDataset(int(args.n_images*0.25), train=False), batch_size=args.batch_size_train, shuffle=True)
+    # if args.pretrain == 1:
+    #     train_loader = DataLoader(SpreadMNISTDataset(1), batch_size=args.batch_size_train, shuffle=True)
+    #     test_loader = DataLoader(SpreadMNISTDataset(1, train=False), batch_size=args.batch_size_train, shuffle=True)
+    # else:
+    train_loader = DataLoader(SpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=True)
+    test_loader = DataLoader(SpreadMNISTDataset(int(args.n_images*0.25), train=False), batch_size=args.batch_size_train, shuffle=True)
     model=SegCaps()
     model.cuda()
     model.to(device)
@@ -45,7 +45,6 @@ def init(args):
 def show_n_example(model, n):
     dat = load_batch(n)
     inputs = torch.from_numpy(dat[0]).float().to(device)
-    
     # for i in range(n):
     #     print(f"Image Number {i+1}:")
     #     print("-"*10)
@@ -57,17 +56,22 @@ def show_n_example(model, n):
     #         print(f"Confidence Error (True Count - Predicted Count): {(sum(sum(dat[1][i][j])) / 100 - sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100):.2f}")
     for i in range(n):
         outputs = model(inputs[i].unsqueeze(0)).float().to(device)
+        # capsule_outs = model(inputs[i].unsqueeze(0))[1]
+        # print(capsule_outs.shape)
         print(f"Image Number {i+1}:")
         print("-"*10)
         print("True count = ", round(sum(sum(sum(dat[1][i]))) / 1000))
         print("Total count = ", round(sum(sum(sum(outputs.cpu().detach().numpy()[0]))) / 1000))
         print(dat[1][i].shape)
-        # print(inputs.shape)
-        # print(outputs.shape)
+        print(inputs.shape)
+        print(outputs.shape)
         for j in range(10):
              print(f"{j}'s... True Count = {round(sum(sum(dat[1][i][j])) / 1000)}, Predicted Count = {sum(sum(outputs.cpu().detach().numpy()[0][j])) / 1000}")
              show_density_map(inputs[i][0].cpu().detach().numpy(), outputs[0][j].cpu().detach().numpy())
 
+        # for capsule in capsule_outs.squeeze():
+        #     for j in np.linspace(1, 5, 4):
+        #         show_density_map(np.zeros((256,256)), j*capsule.cpu().detach().numpy())
 
 
         
@@ -87,12 +91,17 @@ if __name__ == '__main__':
     parser.add_argument('--pretrain', type=int, default='0', help='pretrain (default: 1)')
     parser.add_argument('--data_name', default='train', help='data_name (default: train)')
     parser.add_argument('--params_name', default='segcaps.pkl', help='params_name (default: segcaps.pkl)')
-    parser.add_argument('--load_params_name', default='segcaps.pkl', help='params_name (default: segcaps.pkl)')
+    parser.add_argument('--load_params_name', default='segcaps_best_so_far.pkl', help='params_name (default: segcaps.pkl)')
     args = parser.parse_args()
 
     if args.pretrain == 1:
         train_loader,test_loader,model,decreasing_lr=init(args)
         model.load_state_dict(torch.load(args.load_params_name))
+        if args.nepoch > 1:
+            print("Continuing Training")
+            train_loader,test_loader,model,decreasing_lr=init(args)
+            train(args,model,train_loader,test_loader,
+                    decreasing_lr,wd=0.0001, momentum=0.9)
     else:
         print("Training")
         train_loader,test_loader,model,decreasing_lr=init(args)
