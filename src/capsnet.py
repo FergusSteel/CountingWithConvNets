@@ -80,3 +80,43 @@ class SegCaps(nn.Module):
         # #print("v_lens", v_lens.shape)
         v_lens = v_lens.unsqueeze(0)
         return v_lens#, output_caps
+    
+class CapsNetBasic(nn.Module):
+    def __init__(self):
+        
+        super().__init__()
+        self.conv_1 = nn.Sequential(
+            nn.Conv2d(1, 256, 5, 1, padding="same", bias=False),
+        )
+        #[N,CAPS,C,H,W]
+        self.primary_caps = nn.Sequential(  # 1/2
+            CapsuleLayer(1, 256, "conv", kernel_size=5, stride=1, num_output_capsules=32, output_capsules_dimension=16, routing=1),
+        )
+
+        self.seg_caps= nn.Sequential(  # 1/2
+            CapsuleLayer(32, 16, "conv", kernel_size=5, stride=1, num_output_capsules=1, output_capsules_dimension=16, routing=3),
+        ) 
+
+        self.conv_2 = nn.Sequential(
+            nn.Conv2d(16, 10, 5, 1, padding=2),
+        )
+
+
+    def forward(self, x):
+        x = self.conv_1(x)
+        x.unsqueeze_(1)
+        #print(x.shape)
+
+        x = self.primary_caps(x)
+        #print(x.shape)
+
+        x = self.seg_caps(x)
+        #print(x.shape)
+        x = x.squeeze_(1)
+        x=self.conv_2(x)
+        #print("conv2", x.shape)
+        
+        #print("A", x.shape)
+        v_lens = torch.norm(x, p=2, dim=0)
+        v_lens = v_lens.unsqueeze(0)
+        return v_lens
