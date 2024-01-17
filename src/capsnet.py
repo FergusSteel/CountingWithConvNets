@@ -35,6 +35,21 @@ class SegCaps(nn.Module):
         self.conv_2 = nn.Sequential(
             nn.Conv2d(16, 10, 5, 1, padding=2),
         )
+    
+        self.recon_1 = nn.Sequential(
+            nn.Conv2d(10, 64, 1, 1, padding=0),
+            nn.ReLU(),
+        )
+
+        self.recon_2 = nn.Sequential(
+            nn.Conv2d(64, 128, 1, 1, padding=0),
+            nn.ReLU(),
+        )
+
+        self.out_recon = nn.Sequential(
+            nn.Conv2d(128, 1, 1, 1, padding=0),
+        )
+
 
     def forward(self, x):
         x = self.conv_1(x)
@@ -68,10 +83,10 @@ class SegCaps(nn.Module):
         #print("step cat", x.shape)
         x=self.step_10(x)
         output_caps = x
-        #print("step 10", x.shape)
+        print("step 10", x.shape)
         x.squeeze_(1)
         x=self.conv_2(x)
-        #print("conv2", x.shape)
+        # #print("conv2", x.shape)
         x = x.squeeze_(1)
         #print("A", x.shape)
         v_lens = torch.norm(x, p=2, dim=0)
@@ -79,7 +94,13 @@ class SegCaps(nn.Module):
         # # #print("B", v_lens.shape)
         # #print("v_lens", v_lens.shape)
         v_lens = v_lens.unsqueeze(0)
-        return v_lens#, output_caps
+
+        reconstructed = self.recon_1(x)
+        reconstructed = self.recon_2(reconstructed)
+        reconstructed = self.out_recon(reconstructed)
+        print("recon", reconstructed.shape)
+
+        return v_lens, reconstructed
     
 class CapsNetBasic(nn.Module):
     def __init__(self):
@@ -98,7 +119,7 @@ class CapsNetBasic(nn.Module):
         ) 
 
         self.conv_2 = nn.Sequential(
-            nn.Conv2d(16, 10, 5, 1, padding=2),
+            nn.Conv2d(16, 1, 5, 1, padding=2),
         )
 
 

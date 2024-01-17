@@ -121,8 +121,9 @@ def compute_loss(output, target):
     return class_loss
 
 def compute_acc(predict,target):
-    predict = predict[0].cpu().detach()
-    target = target[0].cpu().detach()
+    return 1
+    predict = predict[0].cpu().detach()[0]
+    target = target[0].cpu().detach()[0]
     for i in range(10):
         predict[i][predict[i]>=0.7]=1
         predict[i][predict[i]<=0.3]=0
@@ -143,13 +144,17 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         inputs.unsqueeze_(1)
         target = data["dmap"].float().to(device)
         output = model(inputs)
+        print(output[0].shape, output[1].shape)
         #loss = compute_loss(output, target)
         #loss = torch.nn.functional.mse_loss(output[0], target.squeeze())
-        loss = F.mse_loss(output[0], target.squeeze())
-        # for i in range(10):
-        #     t_pred_map = output[0][i][None, None, :]
-        #     t_true_map = target[0][i][None, None, :]
-        #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
+
+        # Reconstruction loss
+        loss = 0.0005 * F.mse_loss(output[1], inputs.squeeze())
+            # for i in range(10):
+            #     t_pred_map = output[0][i][None, None, :]
+            #     t_true_map = target[0][i][None, None, :]
+            #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
+        # COUNT LOSS, SUM THE CAPSULE OUTPUT LENGH
         loss += lf(output[0], target.squeeze())
 
         batch_size = target.size(0)
@@ -159,7 +164,7 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         loss.backward()
     
         optimizer.step()
-        acc=compute_acc(output.detach(),target)
+        acc=compute_acc(output[1].detach(),target)
         accs.update(acc)
         batch_time.update(time.time() - end)
         end = time.time()
@@ -190,19 +195,18 @@ def test_epoch(model,loader,epoch,n_epochs):
             target = data["dmap"].float().to(device)
             output = model(inputs)
 
-            #loss = compute_loss(output, target)
-            #loss = torch.nn.functional.mse_loss(output, target)
-            #loss = lf(output[0], target.squeeze())
-            loss = F.mse_loss(output[0], target.squeeze())
-            # for i in range(10):
-            #     t_pred_map = output[0][i][None, None, :]
-            #     t_true_map = target[0][i][None, None, :]
-            #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
+            # Reconstruction loss
+            loss = 0.0005 * F.mse_loss(output[1], inputs.squeeze())
+                # for i in range(10):
+                #     t_pred_map = output[0][i][None, None, :]
+                #     t_true_map = target[0][i][None, None, :]
+                #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
+            # COUNT LOSS, SUM THE CAPSULE OUTPUT LENGH
             loss += lf(output[0], target.squeeze())
 
             batch_size = target.size(0)
             losses.update(loss.data, batch_size)
-            acc = compute_acc(output, target)
+            acc = compute_acc(output[1], target)
             accs.update(acc)
             batch_time.update(time.time() - end)
             end = time.time()

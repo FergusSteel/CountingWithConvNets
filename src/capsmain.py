@@ -2,7 +2,7 @@
 
 import os
 import torch
-from capsnet import SegCaps
+from capsnet import SegCaps, CapsNetBasic
 from torch.utils.data import DataLoader
 from torchdataset import *
 from torchdataset_masks import *
@@ -13,7 +13,6 @@ from pilot_utils import show_density_map, load_batch
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def init(args):
-    
     print("=================FLAGS==================")
     for k, v in args.__dict__.items():
         print('{}: {}'.format(k, v))
@@ -23,16 +22,6 @@ def init(args):
     args.cuda = torch.cuda.is_available()
     if args.cuda:
         torch.cuda.manual_seed(args.seed)
-    # if args.pretrain == 1:
-    #     train_loader = DataLoader(MaskedSpreadMNISTDataset(1), batch_size=args.batch_size_train, shuffle=True)
-    #     test_loader = DataLoader(MaskedSpreadMNISTDataset(1, train=False), batch_size=args.batch_size_train, shuffle=True)
-    # else:
-    #     train_loader = DataLoader(MaskedSpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=True)
-    #     test_loader = DataLoader(MaskedSpreadMNISTDataset(int(args.n_images*0.25), train=False), batch_size=args.batch_size_train, shuffle=True)
-    # if args.pretrain == 1:
-    #     train_loader = DataLoader(SpreadMNISTDataset(1), batch_size=args.batch_size_train, shuffle=True)
-    #     test_loader = DataLoader(SpreadMNISTDataset(1, train=False), batch_size=args.batch_size_train, shuffle=True)
-    # else:
     train_loader = DataLoader(SpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=True)
     test_loader = DataLoader(SpreadMNISTDataset(int(args.n_images*0.25), train=False), batch_size=args.batch_size_train, shuffle=True)
     model=SegCaps()
@@ -45,20 +34,12 @@ def init(args):
 def show_n_example(model, n):
     dat = load_batch(n)
     inputs = torch.from_numpy(dat[0]).float().to(device)
-    # for i in range(n):
-    #     print(f"Image Number {i+1}:")
-    #     print("-"*10)
-    #     print(f"True image count: {round(sum(sum(sum(dat[1][i]))) / 100)}")
-    #     print(f"Predicted image count: {round(sum(sum(sum(outputs.cpu().detach().numpy()[i]))) / 100)}")
-    #     for j in range(10):
-    #         print("-"*10)
-    #         print(f"Count for Digit {j}: True {round(sum(sum(dat[1][i][j])) / 100)}, Predicted: {(sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100):.2f}")
-    #         print(f"Confidence Error (True Count - Predicted Count): {(sum(sum(dat[1][i][j])) / 100 - sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100):.2f}")
     for i in range(n):
-        outputs = model(inputs[i].unsqueeze(0)).float().to(device)
-        # capsule_outs = model(inputs[i].unsqueeze(0))[1]
-        # print(capsule_outs.shape)
+        outputs = model(inputs[i].unsqueeze(0))[0].float().to(device)
+        reconstructed = model(inputs[i].unsqueeze(0))[1][0][0].float().to(device)
+        print(outputs.shape)
         print(f"Image Number {i+1}:")
+        show_density_map(np.zeros((256,256)), reconstructed.cpu().detach().numpy())
         print("-"*10)
         print("True count = ", round(sum(sum(sum(dat[1][i]))) / 1000))
         print("Total count = ", round(sum(sum(sum(outputs.cpu().detach().numpy()[0]))) / 1000))
