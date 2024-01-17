@@ -16,7 +16,7 @@ class SpreadMNISTDataset(Dataset):
     def __init__(self, num_points, train=True, transform=None):
         self.transform = transform
         self.train = train
-        self.dmaps = convert_to_npz.load_data(num_points)
+        self.dmaps = convert_to_npz.load_data(num_points, train)
         
     
 
