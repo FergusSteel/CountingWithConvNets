@@ -13,9 +13,9 @@ def create_density_gaussian(points):
     for i in range(10):
         coords = points[i]
         for coord in coords:
-            map[i][int(coord[1])][int(coord[0])] = 1000
+            map[i][int(coord[1])][int(coord[0])] = 1
     
-        map[i] = np.flipud(gaussian_filter(map[i], sigma=5))
+        map[i] = np.flipud(map[i])#np.flipud(gaussian_filter(map[i], sigma=5))
     
     return map
     
