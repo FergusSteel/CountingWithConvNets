@@ -279,3 +279,9 @@
 ### 11 January 2024
 
 * *3 hours* tweaking code to optimise the best-case performance.
+
+## Week 4
+
+### 29 January 2024
+
+* *4 hours* Added disjoint loss function to stop cautious guess, needs tweaking
