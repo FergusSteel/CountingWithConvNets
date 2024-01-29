@@ -23,7 +23,7 @@ def init(args):
     if args.cuda:
         torch.cuda.manual_seed(args.seed)
     train_loader = DataLoader(SpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=True)
-    test_loader = DataLoader(SpreadMNISTDataset(int(args.n_images*0.25), train=False), batch_size=args.batch_size_train, shuffle=True)
+    test_loader = DataLoader(SpreadMNISTDataset(int(args.n_images*0.2), train=False), batch_size=args.batch_size_train, shuffle=True)
     model=SegCaps()
     model.cuda()
     model.to(device)
@@ -49,12 +49,6 @@ def show_n_example(model, n):
         for j in range(10):
              print(f"{j}'s... True Count = {round(sum(sum(dat[1][i][j])) / 1000)}, Predicted Count = {sum(sum(outputs.cpu().detach().numpy()[0][j])) / 1000}")
              show_density_map(inputs[i][0].cpu().detach().numpy(), outputs[0][j].cpu().detach().numpy())
-
-        # for capsule in capsule_outs.squeeze():
-        #     for j in np.linspace(1, 5, 4):
-        #         show_density_map(np.zeros((256,256)), j*capsule.cpu().detach().numpy())
-
-
         
 
 if __name__ == '__main__':

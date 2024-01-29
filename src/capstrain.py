@@ -43,8 +43,15 @@ class MSELoss(nn.Module):
         y_true = y_true.squeeze()
         for cat in range(10):
             loss += self.lf(y_pred[cat].unsqueeze(0).unsqueeze(1), y_true[cat].unsqueeze(0).unsqueeze(1))
-        
-        return torch.mean(loss)
+            # Count loss is breaking
+            #loss += (sum(sum(y_true[cat])) - sum(sum(y_pred[cat])))**2
+            disjoint_loss = torch.tensor(0.0).cuda()
+            for disjoint_cats in range(10):
+                if disjoint_cats != cat:
+                    disjoint_loss += self.lf(y_pred[cat].unsqueeze(0).unsqueeze(1), y_true[disjoint_cats].unsqueeze(0).unsqueeze(1))
+            loss += (1/(disjoint_loss) )* 0.005
+
+        return loss
     
 class UNET3Loss(nn.Module):
     def __init__(self, weight=None, size_average=True):
@@ -91,6 +98,7 @@ class UNET3Loss(nn.Module):
 lf = MSELoss()
 #lf = pytorch_msssim.msssim
 # lf = UNET3Loss()
+#lf = DiceBCELoss()
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -116,25 +124,22 @@ class AverageMeter(object):
         self.count += n
         self.avg = self.sum / self.count
 
-def compute_loss(output, target):
-    class_loss = (target * F.relu(0.9 - output)+ 0.5 * (1 - target) * F.relu(output - 0.1)).mean()
-    return class_loss
 
-def compute_acc(predict,target):
-    return 1
-    predict = predict[0].cpu().detach()[0]
-    target = target[0].cpu().detach()[0]
-    for i in range(10):
-        predict[i][predict[i]>=0.7]=1
-        predict[i][predict[i]<=0.3]=0
-        predict[i] = predict[i] != target[i]
-    acc = torch.sum(predict).float() / torch.numel(target.data)
-    return acc
+def compute_acc(predict,target, digit_class):
+    y_pred = predict.squeeze()
+    y_true = target.squeeze()
+    true_count = sum(sum(y_true[digit_class])) / 1000
+    pred_count = sum(sum(y_pred[digit_class])) / 1000
+    err = abs(true_count - pred_count)
+    return err
 
-def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
+def train_epoch(model, loader,optimizer, epoch, n_epochs):
+    # Evaluation Metrics
     batch_time = AverageMeter()
     losses = AverageMeter()
+    per_class_count_err = [AverageMeter() for i in range(10)]
     accs = AverageMeter()
+
     model.train()
     end = time.time()
     for batch_index, data in enumerate(loader):
@@ -144,18 +149,10 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         inputs.unsqueeze_(1)
         target = data["dmap"].float().to(device)
         output = model(inputs)
-        print(output[0].shape, output[1].shape)
-        #loss = compute_loss(output, target)
-        #loss = torch.nn.functional.mse_loss(output[0], target.squeeze())
 
         # Reconstruction loss
-        loss = 0.0005 * F.mse_loss(output[1], inputs.squeeze())
-            # for i in range(10):
-            #     t_pred_map = output[0][i][None, None, :]
-            #     t_true_map = target[0][i][None, None, :]
-            #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
-        # COUNT LOSS, SUM THE CAPSULE OUTPUT LENGH
-        loss += lf(output[0], target.squeeze())
+        #loss = 0.005 * lf(output[1], inputs.squeeze())
+        loss = lf(output[0], target.squeeze())
 
         batch_size = target.size(0)
         losses.update(loss.data, batch_size)
@@ -164,8 +161,12 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
         loss.backward()
     
         optimizer.step()
-        acc=compute_acc(output[1].detach(),target)
-        accs.update(acc)
+        # acc=compute_acc(output[1].detach(),target, 0)
+        # accs.update(acc)
+
+        for digit_class in range(10):
+            per_class_count_err[digit_class].update(compute_acc(output[0].detach().cpu().numpy(), target.detach().cpu().numpy(), digit_class), batch_size)
+
         batch_time.update(time.time() - end)
         end = time.time()
         res = '\t'.join([
@@ -173,7 +174,7 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, ):
             'Batch: [%d/%d]' % (batch_index, len(loader)),
             'Time %.3f (%.3f)' % (batch_time.val, batch_time.avg),
             'Loss %.4f (%.4f)' % (losses.val, losses.avg),
-            'Error %.4f (%.4f)' % (accs.val, accs.avg),
+            f'P.C. Accs {[(i, val) for i, val in enumerate([round(acc.avg,2) for acc in per_class_count_err])]}',
         ])
         print(res)
     return batch_time.avg, losses.avg  , accs.avg
@@ -184,6 +185,7 @@ def test_epoch(model,loader,epoch,n_epochs):
     batch_time = AverageMeter()
     losses = AverageMeter()
     accs = AverageMeter()
+    per_class_count_err = [AverageMeter() for i in range(10)]
 
     # Model on eval mode
     model.eval()
@@ -196,18 +198,21 @@ def test_epoch(model,loader,epoch,n_epochs):
             output = model(inputs)
 
             # Reconstruction loss
-            loss = 0.0005 * F.mse_loss(output[1], inputs.squeeze())
+            #loss = 0.005 * F.mse_loss(output[1], inputs.squeeze())
                 # for i in range(10):
                 #     t_pred_map = output[0][i][None, None, :]
                 #     t_true_map = target[0][i][None, None, :]
                 #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
             # COUNT LOSS, SUM THE CAPSULE OUTPUT LENGH
-            loss += lf(output[0], target.squeeze())
+            loss = lf(output[0], target.squeeze())
 
             batch_size = target.size(0)
             losses.update(loss.data, batch_size)
-            acc = compute_acc(output[1], target)
-            accs.update(acc)
+            # acc = compute_acc(output[1], target,0)
+            # accs.update(acc)
+            for digit_class in range(10):
+                per_class_count_err[digit_class].update(compute_acc(output[0].detach().cpu().numpy(), target.detach().cpu().numpy(), digit_class), batch_size)
+
             batch_time.update(time.time() - end)
             end = time.time()
             res = '\t'.join([
@@ -216,7 +221,7 @@ def test_epoch(model,loader,epoch,n_epochs):
                 'Batch: [%d/%d]' % (batch_index, len(loader)),
                 'Time %.3f (%.3f)' % (batch_time.val, batch_time.avg),
                 'Loss %.4f (%.4f)' % (losses.val, losses.avg),
-                'Error %.4f (%.4f)' % (accs.val, accs.avg),
+                f'P.C. MAE {[(i, val) for i, val in enumerate([round(acc.avg,2) for acc in per_class_count_err])]}',
             ])
             print(res)
     wandb.log({'Test Loss': losses.avg, 'Test Accuracy': 1 - accs.avg})
@@ -230,7 +235,7 @@ def train(args, model,train_loader, test_loader, decreasing_lr, wd=0.0001, momen
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=decreasing_lr, gamma=0.1)
-    best_train_loss = 10
+    best_train_loss = np.inf
     for epoch in range(args.nepoch):
         scheduler.step()
         
@@ -247,7 +252,7 @@ def train(args, model,train_loader, test_loader, decreasing_lr, wd=0.0001, momen
             epoch=epoch,
             n_epochs=args.nepoch,
         )
-        if best_train_loss>train_loss:
+        if train_loss < best_train_loss:
             best_train_loss=train_loss
             print('best_loss'+str(best_train_loss))
             torch.save(model.state_dict(),args.params_name)
