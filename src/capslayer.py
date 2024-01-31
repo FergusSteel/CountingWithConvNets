@@ -18,7 +18,10 @@ class CapsuleLayer(nn.Module):
         self.num_input_capsules=num_input_capsules
         for _ in range(num_input_capsules):
             if self.op=='conv':
-                self.convs.append(nn.Conv2d(input_capsule_dimension, self.num_output_capsules*self.output_capsules_dimension, self.kernel_size, self.stride,padding=2,bias=False))
+                if self.kernel_size == 1:
+                    self.convs.append(nn.Conv2d(input_capsule_dimension, self.num_output_capsules*self.output_capsules_dimension, self.kernel_size, self.stride,padding=0,bias=False))
+                else:
+                    self.convs.append(nn.Conv2d(input_capsule_dimension, self.num_output_capsules*self.output_capsules_dimension, self.kernel_size, self.stride,padding=2,bias=False))
             else:
                 self.convs.append(nn.ConvTranspose2d(input_capsule_dimension, self.num_output_capsules * self.output_capsules_dimension, self.kernel_size, self.stride,padding=2,output_padding=1))
 
