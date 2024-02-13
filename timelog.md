@@ -280,8 +280,59 @@
 
 * *3 hours* tweaking code to optimise the best-case performance.
 
+## Week 2
+
+### 16 January 2024
+
+* *1 hour* Panicking, trying to fix the "best-case" performance which is really not good enough
+* *3 Hours* Making Network Larger and testing if this helps capture more complexity in outputs
+
+## Week 3
+
+### 23 January 2024
+
+* *1 hour* Started working onevalluation metrics, even if its not working I still need somethign to graph
+
 ## Week 4
 
 ### 29 January 2024
 
 * *4 hours* Added disjoint loss function to stop cautious guess, needs tweaking
+
+### 31 January 2024
+
+* *1 hour* Testing the effect of increasing model complexity
+* *0.5 hours* Bug fixing, kernel size 1 bug
+
+### 2 February 2024
+
+* *1 hour* quick meeting with Paul to discuss dissertation tips
+
+# Week 5
+
+### 5 February 2024
+
+* *3 horus* Rough draft of introduction
+* *0.5 hours* collating background info into background
+
+### 6 February 2024
+
+* *ALL DAY* Reading through previous dissertation attempts of this subject
+
+### 8 February 2024
+
+* *2 hours* Exploring using simplified version of model for better results
+* *1 Hour* Finished off first draft of the skeleton of the dissertation now I have some direction
+
+### 9 February 2024
+
+* *1 hour* Finally started looking into visualizing capsules (made a python file, barely got started)
+
+# Week 6
+
+### 12 February 2024
+
+* *1 hour* Writing some background on CNN reserach
+* *3 hours* Exploring previous version of model, fixing bugs, testing
+* *0.5 Hours* Backdating timelog with all the panic that has occured over last 3 weeks
+
