@@ -74,10 +74,20 @@ class CapsuleLayer(nn.Module):
 
             r_t_mul_u_hat_t_list = []
             for b_t, u_hat_t in zip(b_t_list, u_hat_t_list_):
-                b_t.transpose_(1, 3).transpose_(2, 3)  
-                c_t = torch.nn.functional.softmax(b_t, dim=1)
+                # b_t.transpose_(1, 3).transpose_(2, 3)  
+                # c_t = torch.nn.functional.softmax(b_t, dim=3)
 
-                sum_c_t = nn_.conv2d_same(c_t, one_kernel, stride=(1, 1))  
+                # sum_c_t = nn_.conv2d_same(c_t, one_kernel, stride=(1, 1))
+                # routing softmax (N,H_1,W_1,t_1)
+                b_t.transpose_(1, 3).transpose_(2, 3)  #[N,t_1,H_1, W_1]
+                try:
+                    b_t_max = torch.nn.functional.max_pool2d(b_t,kernel_size,1,padding=2)
+                    b_t_max = b_t_max.max(1, True)[0]
+                    c_t = torch.exp(b_t - b_t_max)
+                except:
+                    c_t = torch.nn.functional.softmax(b_t, dim=3)
+                    
+                sum_c_t = nn_.conv2d_same(c_t, one_kernel, stride=(1, 1))  # [... , 1]  
                 r_t = c_t / sum_c_t  
                 r_t = r_t.transpose(1, 3).transpose(1, 2)
                 r_t = r_t.unsqueeze(4)

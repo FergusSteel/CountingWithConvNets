@@ -42,14 +42,14 @@ class MSELoss(nn.Module):
         y_pred = y_pred.squeeze()
         y_true = y_true.squeeze()
         for cat in range(10):
-            loss += (self.lf(y_pred[cat], y_true[cat]) )
+            loss += (self.lf(y_pred[cat], y_true[cat]))
             # Count loss is breaking
-            #loss += (sum(sum(y_true[cat])) - sum(sum(y_pred[cat])))**2
+            #oss += (sum(sum(y_true[cat])) - sum(sum(y_pred[cat])))**2
             # disjoint_loss = torch.tensor(0.0).cuda()
             # for disjoint_cats in range(10):
             #     if disjoint_cats != cat:
             #         disjoint_loss += (self.lf(y_pred[cat], y_true[disjoint_cats]))
-            # loss += (1/(disjoint_loss)) 
+            # loss += (1/(disjoint_loss)) * 0.005
         return loss
     
 class UNET3Loss(nn.Module):
@@ -150,8 +150,9 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs):
         output = model(inputs)
 
         # Reconstruction loss
-        #loss = 0.005 * lf(output[1], inputs.squeeze())
         loss = lf(output[0], target.squeeze())
+        #'print("Hello", output.shape,)
+        #loss += 0.005 * lf(output[1], inputs.squeeze())
 
         batch_size = target.size(0)
         losses.update(loss.data, batch_size)
@@ -202,9 +203,9 @@ def test_epoch(model,loader,epoch,n_epochs):
                 #     t_pred_map = output[0][i][None, None, :]
                 #     t_true_map = target[0][i][None, None, :]
                 #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
-            # COUNT LOSS, SUM THE CAPSULE OUTPUT LENGH
-            #loss = 0.005 * lf(output[1], inputs.squeeze())
             loss = lf(output[0], target.squeeze())
+            #loss += 0.005 * lf(output[1], inputs.squeeze())
+
 
             batch_size = target.size(0)
             losses.update(loss.data, batch_size)
