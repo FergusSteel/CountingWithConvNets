@@ -10,6 +10,7 @@ import torch
 import numpy as np
 from torch.autograd import grad
 import pytorch_msssim
+import math
 
 import wandb
 wandb.init(project='SegCaps-PyTorch')
@@ -42,9 +43,9 @@ class MSELoss(nn.Module):
         y_pred = y_pred.squeeze()
         y_true = y_true.squeeze()
         for cat in range(10):
-            loss += (self.lf(y_pred[cat], y_true[cat]))
+            loss += (self.lf(y_pred[cat], y_true[cat]))# * (abs(sum(sum(y_true[cat])) - sum(sum(y_pred[cat]))) * 0.001)
             # Count loss is breaking
-            #oss += (sum(sum(y_true[cat])) - sum(sum(y_pred[cat])))**2
+            #loss *= abs(sum(sum(y_true[cat])) - sum(sum(y_pred[cat]))) * 0.001
             # disjoint_loss = torch.tensor(0.0).cuda()
             # for disjoint_cats in range(10):
             #     if disjoint_cats != cat:
@@ -132,11 +133,11 @@ def compute_acc(predict,target, digit_class):
     err = abs(true_count - pred_count)
     return err
 
-def train_epoch(model, loader,optimizer, epoch, n_epochs):
+def train_epoch(model, loader,optimizer, epoch, n_epochs, n_classes):
     # Evaluation Metrics
     batch_time = AverageMeter()
     losses = AverageMeter()
-    per_class_count_err = [AverageMeter() for i in range(10)]
+    per_class_count_err = [AverageMeter() for i in range(n_classes)]
     accs = AverageMeter()
 
     model.train()
@@ -164,7 +165,7 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs):
         # acc=compute_acc(output[1].detach(),target, 0)
         # accs.update(acc)
 
-        for digit_class in range(10):
+        for digit_class in range(n_classes):
             per_class_count_err[digit_class].update(compute_acc(output[0].detach().cpu().numpy(), target.detach().cpu().numpy(), digit_class), batch_size)
 
         batch_time.update(time.time() - end)
@@ -181,11 +182,11 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs):
 
 
 
-def test_epoch(model,loader,epoch,n_epochs):
+def test_epoch(model,loader,epoch,n_epochs,n_classes):
     batch_time = AverageMeter()
     losses = AverageMeter()
     accs = AverageMeter()
-    per_class_count_err = [AverageMeter() for i in range(10)]
+    per_class_count_err = [AverageMeter() for i in range(n_classes)]
 
     # Model on eval mode
     model.eval()
@@ -211,7 +212,7 @@ def test_epoch(model,loader,epoch,n_epochs):
             losses.update(loss.data, batch_size)
             # acc = compute_acc(output[1], target,0)
             # accs.update(acc)
-            for digit_class in range(10):
+            for digit_class in range(n_classes):
                 per_class_count_err[digit_class].update(compute_acc(output[0].detach().cpu().numpy(), target.detach().cpu().numpy(), digit_class), batch_size)
 
             batch_time.update(time.time() - end)
@@ -230,7 +231,7 @@ def test_epoch(model,loader,epoch,n_epochs):
 
 
 
-def train(args, model,train_loader, test_loader, decreasing_lr):
+def train(args, model,train_loader, test_loader, decreasing_lr, n_classes):
     if args.seed is not None:
         torch.manual_seed(args.seed)
 
@@ -246,12 +247,14 @@ def train(args, model,train_loader, test_loader, decreasing_lr):
             optimizer=optimizer,
             epoch=epoch,
             n_epochs=args.nepoch,
+            n_classes=n_classes
         )
         _, test_loss,test_acc = test_epoch(
             loader=test_loader,
             model=model,
             epoch=epoch,
             n_epochs=args.nepoch,
+            n_classes=n_classes
         )
         if train_loss < best_train_loss:
             best_train_loss=train_loss

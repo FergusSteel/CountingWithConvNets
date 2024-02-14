@@ -23,11 +23,15 @@ def init(args):
     train_loader = DataLoader(SpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=False)
     test_loader = DataLoader(SpreadMNISTDataset(int(args.n_images*0.2), train=False), batch_size=args.batch_size_train, shuffle=False)
     if args.model == "Seg":
-        model=CapsNetBasic(10)
+        model=CapsNetBasic(args.n_classes)
     elif args.model == "SegCaps":
         model = SegCapsOld()
     elif args.model == "CCC":
         model = CCCaps()
+
+    
+    global n_classes
+    n_classes = args.n_classes
 
     model.cuda()
     model.to(device)
@@ -49,7 +53,7 @@ def show_n_example(model, n):
         print("-"*10)
         print("True count = ", round(sum(sum(sum(dat[1][i]))) / 1000))
         print("Total count = ", round(sum(sum(sum(outputs.cpu().detach().numpy()[0]))) / 1000))
-        for j in range(10):
+        for j in range(n_classes):
              print(f"{j}'s... True Count = {round(sum(sum(dat[1][i][j])) / 1000)}, Predicted Count = {sum(sum(outputs.cpu().detach().numpy()[0][j]))}")
              show_density_map(inputs[i][0].cpu().detach().numpy(), outputs[0][j].cpu().detach().numpy())
         
@@ -68,6 +72,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_name', default='train', help='data_name (default: train)')
     parser.add_argument('--params_name', default='segcaps_longsigma3.pkl', help='params_name (default: segcaps.pkl)')
     parser.add_argument('--load_params_name', default='segcaps_best_so_far.pkl', help='params_name (default: segcaps.pkl)')
+    parser.add_argument("--n_classes", type=int, default=10, help="Number of classes.")
     args = parser.parse_args()
 
     if args.pretrain == 1:
@@ -77,12 +82,12 @@ if __name__ == '__main__':
             print("Continuing Training")
             train_loader,test_loader,model,decreasing_lr=init(args)
             train(args,model,train_loader,test_loader,
-                    decreasing_lr)
+                    decreasing_lr, n_classes)
     else:
         print("Training")
         train_loader,test_loader,model,decreasing_lr=init(args)
         train(args,model,train_loader,test_loader,
-                decreasing_lr)
+                decreasing_lr, n_classes)
 
     show_n_example(model, 10)
 

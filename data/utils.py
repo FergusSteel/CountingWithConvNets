@@ -51,7 +51,7 @@ def augment_dataset(images, labels):
         print("Data Could Not Be Sorted Please Sample Randomly")
         return None
     
-def generate_map_config(images, labels, partitions, fname="output", num_digits=24, min_distance=28, prob_density=[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], scale_var_prob=0, scale_var_amount=0, rot_var_prob=0, rot_var_deg=0):
+def generate_map_config(images, labels, partitions, fname="output", num_digits=24, min_distance=28, prob_density=[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], scale_var_prob=0, scale_var_amount=0, rot_var_prob=0, rot_var_deg=0, train=1, arg=""):
     # Generate Coordinates on 256x256 map (leave border at edge)
     xs, ys = generate_points(num_digits, (228,228), min_distance+(images[0].shape[0]*scale_var_amount))
     fig = plt.figure(figsize=(256 / 80, 256 / 80), dpi=80)
@@ -115,7 +115,6 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
                 ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0], y, y + img.shape[1]))
                 #ax.plot(x + (img.shape[0]//2), y + (img.shape[1]//2), 'ro')
 
-        # Construct Dictionary of centroids of objects
         if lab not in centroid_dict.keys():
             centroid_dict[lab] = [centroid]
         else:
@@ -123,15 +122,13 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
 
     # for centroid in centroid_dict.values():
     #   for centre in centroid:
-    #     ax.plot(centre[0], centre[1], 'ro')
+    #     ax.plot(centre[0], centre[1])
 
-    # Save image
     fig.set_facecolor('black')
-    fig.savefig(f'train/x/{fname}.png', transparent=False)
+    fig.savefig(f'{arg}{"train" if train else "test"}/x/{fname}.png', transparent=False)
     plt.close()
 
-    # Save mapping
-    with open(f"train/y/{fname}.csv", 'w', newline='') as f:
+    with open(f'{arg}{"train" if train else "test"}/y/{fname}.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         for i in range(10):
             # Flatten the coordinates list and convert them to strings

@@ -1,6 +1,7 @@
 from utils import *
 import argparse
 from tqdm import tqdm
+import os
 
 # ARG PARSING
 def pars_cfg():
@@ -10,6 +11,7 @@ def pars_cfg():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--train", type=int, default=1, help="Use training distribution (1) or test (0)")
+    parser.add_argument("--file_name", type=str, default="", help="Name of the file to save.")
     parser.add_argument("--num_images", type=int, default=10000, required=True, help="Number of images to generate.")
     parser.add_argument("--min_n", type=int, default=0, help="Max number of digits in each image.")
     parser.add_argument("--max_n", type=int, default=16, help="Min number of digits in each image.")
@@ -43,17 +45,32 @@ def generator(config):
     prob_density=config.prob_density
     scale_var_prob=config.scale_var_prob
     scale_var_amount=config.scale_var_amount
+    file_path=config.file_name
+
+    # setupfile strucutre
+    target_file_path_root = f"{file_path}{'train' if config.train == 1 else 'test'}"
+    print(f"target_file_path_root: {target_file_path_root}")
+
+    if not os.path.exists(target_file_path_root):
+        os.makedirs(target_file_path_root)
+    if not os.path.exists(f"{target_file_path_root}/x"):
+        os.makedirs(f"{target_file_path_root}/x")
+    if not os.path.exists(f"{target_file_path_root}/y"):
+        os.makedirs(f"{target_file_path_root}/y")
+                
+    #normalise the probas
+    pdtot = sum(prob_density)
+    for i in range(len(prob_density)):
+        prob_density[i] = prob_density[i] / pdtot
 
     for i in tqdm(range(0, num_images)):
-        # Select the amount of digits in an image
         n = np.random.randint(min_n, max_n + 1)
-        generate_map_config(images, labels, partitions, i, n, min_distance, prob_density, scale_var_prob, scale_var_amount)
+        generate_map_config(images, labels, partitions, i, n, min_distance, prob_density, scale_var_prob, scale_var_amount, train=config.train, arg=file_path)
 
 
 if __name__ == "__main__":
     config = pars_cfg()
     assert config.min_distance > 14 and config.min_distance < 40
     assert config.max_n < 32
-    assert np.sum(config.prob_density) == 1.0
     
     generator(config)
