@@ -71,13 +71,13 @@ def show_density_map(img, dmap):
     plt.show()
 
 
-def load_data(num_images, train=True):
+def load_data(num_images, path="", train=True):
     y = np.zeros((num_images, 10, 256, 256), dtype=np.float16)
     parent_directory = os.path.abspath('..')
     if train:
-        file_path = os.path.join(parent_directory, "data", "train", "y")
+        file_path = os.path.join(parent_directory, "data", f"{path}train", "y")
     else:
-        file_path = os.path.join(parent_directory, "data", "test", "y")
+        file_path = os.path.join(parent_directory, "data", f"{path}test", "y")
     print("Loading data...")
     print("This may take a while...")
     for i in tqdm(range(num_images)):

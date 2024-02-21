@@ -43,7 +43,8 @@ class MSELoss(nn.Module):
         y_pred = y_pred.squeeze()
         y_true = y_true.squeeze()
         for cat in range(10):
-            loss += (self.lf(y_pred[cat], y_true[cat]))# * (abs(sum(sum(y_true[cat])) - sum(sum(y_pred[cat]))) * 0.001)
+            loss += (self.lf(y_pred[cat], y_true[cat])) 
+            #loss += (abs(sum(sum(y_true[cat])) - sum(sum(y_pred[cat]))) / 1000 )
             # Count loss is breaking
             #loss *= abs(sum(sum(y_true[cat])) - sum(sum(y_pred[cat]))) * 0.001
             # disjoint_loss = torch.tensor(0.0).cuda()
@@ -128,8 +129,8 @@ class AverageMeter(object):
 def compute_acc(predict,target, digit_class):
     y_pred = predict.squeeze()
     y_true = target.squeeze()
-    true_count = sum(sum(y_true[digit_class])) / 1000
-    pred_count = sum(sum(y_pred[digit_class])) / 1000
+    true_count = sum(sum(y_true[digit_class]))
+    pred_count = sum(sum(y_pred[digit_class]))
     err = abs(true_count - pred_count)
     return err
 
@@ -149,11 +150,14 @@ def train_epoch(model, loader,optimizer, epoch, n_epochs, n_classes):
         inputs.unsqueeze_(1)
         target = data["dmap"].float().to(device)
         output = model(inputs)
+        print(output[1].shape)
+        print(sum(target).shape)
 
         # Reconstruction loss
         loss = lf(output[0], target.squeeze())
-        #'print("Hello", output.shape,)
-        #loss += 0.005 * lf(output[1], inputs.squeeze())
+        #loss += 0.0005 * lf(output[1].squeeze(0), inputs.squeeze(0))
+
+        print(output[1].shape, inputs.shape)
 
         batch_size = target.size(0)
         losses.update(loss.data, batch_size)
@@ -205,7 +209,7 @@ def test_epoch(model,loader,epoch,n_epochs,n_classes):
                 #     t_true_map = target[0][i][None, None, :]
                 #     loss += (1 - lf(t_pred_map, t_true_map, normalize="relu"))
             loss = lf(output[0], target.squeeze())
-            #loss += 0.005 * lf(output[1], inputs.squeeze())
+            #loss += 0.0005 * lf(output[1].squeeze(0), inputs.squeeze(0))
 
 
             batch_size = target.size(0)
