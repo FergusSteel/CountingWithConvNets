@@ -4,6 +4,7 @@ import os
 import os.path as ospath
 import matplotlib.pyplot as plt
 from matplotlib.transforms import Affine2D
+from scipy.ndimage import rotate
 import csv
 
 # Generate #num_points amount of points with min_distance pixels between them
@@ -103,14 +104,21 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
         if scale:
             centroid = (x + ((img.shape[0]*scale_amount_instance)//2), y + ((img.shape[1]*scale_amount_instance)//2))
             if rot:
-                ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0]*scale_amount_instance, y, y + img.shape[1]*scale_amount_instance), transform=rotation)
+                img = rotate(img, rot_degrees_instance, reshape=True, mode="constant", cval=0, prefilter=False)
+                ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0]*scale_amount_instance, y, y + img.shape[1]*scale_amount_instance))
+                # transform_data = rotation + ax.transData
+                # im.set_transform(transform_data)
             else:
                 ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0]*scale_amount_instance, y, y + img.shape[1]*scale_amount_instance))
                 #ax.plot(x + (img.shape[0]*scale_amount_instance)//2, y + (img.shape[1]*scale_amount_instance)//2, 'ro')
         else:
             centroid = (x + img.shape[0]//2, y + img.shape[1]//2)
             if rot:
-                ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0], y, y + img.shape[1]), transform=rotation)
+                img = rotate(img, rot_degrees_instance, reshape=False, mode="constant", cval=0, prefilter=False)
+                ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0], y, y + img.shape[1]))
+                # transform_data = rotation + ax.transData
+                # im.set_transform(transform_data)nsData
+                # im.set_transform(transform_data)
             else:
                 ax.matshow(img, cmap="gray", extent=(x, x + img.shape[0], y, y + img.shape[1]))
                 #ax.plot(x + (img.shape[0]//2), y + (img.shape[1]//2), 'ro')
@@ -124,7 +132,7 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
     #   for centre in centroid:
     #     ax.plot(centre[0], centre[1])
 
-    fig.set_facecolor('black')
+    fig.set_facecolor('0')
     fig.savefig(f'{arg}{"train" if train else "test"}/x/{fname}.png', transparent=False)
     plt.close()
 
