@@ -3,6 +3,7 @@
 import os
 import torch
 from capsnet import SegCaps, CapsNetBasic, CCCaps, SegCapsOld, ReconstructionNet
+from pilot_utils import TorchUNetModel
 from torch.utils.data import DataLoader
 from torchdataset import *
 from torchdataset_masks import *
@@ -12,6 +13,10 @@ from caps_recontrain import recontrain
 from convert_to_npz import *
 from pilot_utils import show_density_map, load_batch
 from introspection_utils import display_capsule_grid
+import numpy as np
+from matplotlib.animation import FuncAnimation
+from IPython import display
+import matplotlib.pyplot as plt
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -23,12 +28,15 @@ def init(args):
         torch.cuda.manual_seed(args.seed)
     train_loader = DataLoader(SpreadMNISTDataset(args.n_images), batch_size=args.batch_size_train, shuffle=False)
     test_loader = DataLoader(SpreadMNISTDataset(int(args.n_images*0.2), train=False), batch_size=args.batch_size_train, shuffle=False)
-    if args.model == "Seg":
-        model=CapsNetBasic(args.n_classes)
-    elif args.model == "SegCaps":
-        model = SegCapsOld()
-    elif args.model == "CCC":
-        model = CCCaps()
+    if args.unet == 1:
+        model = TorchUNetModel(args.n_classes).to(device)
+    else:   
+        if args.model == "Seg":
+            model=CapsNetBasic(args.n_classes)
+        elif args.model == "SegCaps":
+            model = SegCapsOld()
+        elif args.model == "CCC":
+            model = CCCaps()
 
     
     global n_classes
@@ -62,15 +70,32 @@ def show_n_example(model, n):
 def introspect_example(capsmodel, reconmodel, n):
     test_loader = DataLoader(SpreadMNISTDataset(n, train=False))
     iterater = iter(test_loader)
-    input_dict = next(iterater)
-    img = input_dict['image'].to(device)
-    ground_truth = input_dict["dmap"]
-    
-    output = model(capsmodel(img.unsqueeze(0).float().to(device))[1])
-    print(output.shape)
-    print(f"Reconstruction")
-    show_density_map(img.cpu().detach().numpy()[0], output.cpu().detach().numpy().squeeze(0))
-    show_density_map(np.zeros((256,256)), output.cpu().detach().numpy().squeeze(0))
+    for i in range(n):
+        input_dict = next(iterater)
+        img = input_dict['image'].to(device)
+        ground_truth = input_dict["dmap"]
+
+        capsout = capsmodel(img.unsqueeze(0).float().to(device))[1]
+        print(capsout.shape)
+
+        reconstructed_base = model(capsout)
+        print(f"Base Reconstruction")
+        show_density_map(img.cpu().detach().numpy()[0], reconstructed_base.cpu().detach().numpy().squeeze(0))
+        show_density_map(np.zeros((256,256)), reconstructed_base.cpu().detach().numpy().squeeze(0))
+
+        for dimension_to_vary in range(16):
+            variance_test = np.zeros((11,16,256,256))
+            variance = np.arange(-5, 5, 1)
+            for i, var in enumerate(variance):
+                capscopy = capsout.clone()
+                var = round(var,2)
+                print("Varying Dimension [", dimension_to_vary, "] by scalar amount: ", round(var,2))
+                capscopy[dimension_to_vary] *= var
+                reconstructed = model(capscopy)
+
+                show_density_map(img.cpu().detach().numpy()[0], reconstructed.cpu().detach().numpy().squeeze(0))
+
+
     
         
 
@@ -87,9 +112,10 @@ if __name__ == '__main__':
     parser.add_argument('--gpu', default='0', help='index of gpus to use')
     parser.add_argument('--data_name', default='train', help='data_name (default: train)')
     parser.add_argument('--params_name', default='segcaps_newest.pkl', help='params_name (default: segcaps.pkl)')
-    parser.add_argument('--load_params_name', default='segcaps_longlongsigma2.pkl', help='params_name (default: segcaps.pkl)')
+    parser.add_argument('--load_params_name', default='segcaps_100Sigma2Good.pkl', help='params_name (default: segcaps.pkl)')
     parser.add_argument("--n_classes", type=int, default=10, help="Number of classes.")
     parser.add_argument('--recon', type=int, default=0, help='run evaluation model')
+    parser.add_argument("--unet", type=int, default=0, help="Use UNet model")
     args = parser.parse_args()
     
     # Training the reconstructionnetwork guy
@@ -112,6 +138,7 @@ if __name__ == '__main__':
             train_loader,test_loader,model,decreasing_lr=init(args)
             train(args,model,train_loader,test_loader,
                     decreasing_lr, n_classes)
+            show_n_example(model, 1)
         else:
             print("Evaluation Only")
             show_n_example(model, 1)

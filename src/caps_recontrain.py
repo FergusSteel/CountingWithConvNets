@@ -182,6 +182,6 @@ def recontrain(args, capsmodel, model,train_loader, test_loader, decreasing_lr, 
         if train_loss < best_train_loss:
             best_train_loss=train_loss
             print('best_loss'+str(best_train_loss))
-            torch.save(model.state_dict(),args.params_name)
+            torch.save(model.state_dict(),"ReconWeigths.pkl")
         print(train_loss)
     

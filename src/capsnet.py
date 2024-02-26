@@ -266,7 +266,7 @@ class CapsNetBasic(nn.Module):
         #print("conv2", x.shape)
         x = x.squeeze_(0)
         recon = x
-        print("recon shape", recon.shape)
+        
         #x = self.reconstruction_conv1(x)
         x = self.reconstruction_conv2(x)
         # x  = torch.tensor([self.reconstruction_conv2(x[caps]) for caps in range(self.n_classes)])

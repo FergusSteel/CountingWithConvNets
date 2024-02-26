@@ -13,7 +13,7 @@ def create_density_gaussian(points):
     for i in range(10):
         coords = points[i]
         for coord in coords:
-            map[i][int(coord[1])][int(coord[0])] = 1000
+            map[i][int(coord[1])][int(coord[0])] = 100
     
         map[i] = np.flipud(gaussian_filter(map[i], sigma=2)) #np.flipud(map[i])#
     
@@ -21,12 +21,12 @@ def create_density_gaussian(points):
     
 
 # Read each CSV file and create density maps
-def read_csv(n, train):
+def read_csv(n, train, path=""):
     parent_directory = os.path.abspath('..')
     if train:
-        file_path = os.path.join(parent_directory, 'data', 'train', 'y', f"{n}.csv") 
+        file_path = os.path.join(parent_directory, 'data', f'{path}train', 'y', f"{n}.csv") 
     else:
-        file_path = os.path.join(parent_directory, 'data', 'test', 'y', f"{n}.csv") 
+        file_path = os.path.join(parent_directory, 'data', f'{path}test', 'y', f"{n}.csv") 
      # Specify the relative path to your file
 
     with open(file_path, "r", newline="") as f:
@@ -45,7 +45,7 @@ def read_csv(n, train):
 
     return points
 
-def read_npy(n, train=True):
+def read_npy(n, train=True, path=""):
     parent_directory = os.path.abspath('..')
     if train:
         file_path = os.path.join(parent_directory, "data", "mask", "train", "y")
@@ -72,16 +72,18 @@ def show_density_map(img, dmap):
 
 
 def load_data(num_images, path="", train=True):
+    print(train)
     y = np.zeros((num_images, 10, 256, 256), dtype=np.float16)
     parent_directory = os.path.abspath('..')
-    if train:
+    if train == True:
         file_path = os.path.join(parent_directory, "data", f"{path}train", "y")
     else:
+        print("broke")
         file_path = os.path.join(parent_directory, "data", f"{path}test", "y")
     print("Loading data...")
     print("This may take a while...")
     for i in tqdm(range(num_images)):
-        points = read_csv(i, train)
+        points = read_csv(i, train, path=path)
         density_map = create_density_gaussian(points)
         y[i] = density_map
 
