@@ -44,7 +44,7 @@ class MSELoss(nn.Module):
         y_true = y_true.squeeze()
         for cat in range(10):
             loss += (self.lf(y_pred[cat], y_true[cat])) 
-            #loss += (abs(sum(sum(y_true[cat])) - sum(sum(y_pred[cat]))) / 1000 )
+            loss += (abs(sum(sum(y_true[cat])) - sum(sum(y_pred[cat]))) / 100_000)
             # Count loss is breaking
             #loss *= abs(sum(sum(y_true[cat])) - sum(sum(y_pred[cat]))) * 0.001
             # disjoint_loss = torch.tensor(0.0).cuda()
