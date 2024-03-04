@@ -21,6 +21,7 @@ def pars_cfg():
     parser.add_argument("--scale_var_amount", type=float, default=0.0, help="Maximum that each digit has to scale.")
     parser.add_argument("--rot_var_prob", type=float, default=0.0, help="Chance that each digit has to be rotated. [0.0, 1.0]")
     parser.add_argument("--rot_var_deg", type=float, default=0.0, help="Maximum that each digit is rotated.")
+    parser.add_argument("--noise_level", type=float, default=0.0, help="Noise level to add to the images.")
 
 
     cfg = parser.parse_args()
@@ -50,6 +51,7 @@ def generator(config):
     rot_var_deg=config.rot_var_deg
     rot_var_prob=config.rot_var_prob
     file_path=config.file_name
+    noise_level=config.noise_level
 
     # setupfile strucutre
     target_file_path_root = f"{file_path}{'train' if config.train == 1 else 'test'}"
@@ -69,7 +71,7 @@ def generator(config):
 
     for i in tqdm(range(0, num_images)):
         n = np.random.randint(min_n, max_n + 1)
-        generate_map_config(images, labels, partitions, i, n, min_distance, prob_density, scale_var_prob, scale_var_amount, rot_var_deg=rot_var_deg, rot_var_prob=rot_var_prob, train=config.train, arg=file_path)
+        generate_map_config(images, labels, partitions, i, n, min_distance, prob_density, scale_var_prob, scale_var_amount, rot_var_deg=rot_var_deg, rot_var_prob=rot_var_prob, train=config.train, arg=file_path, noise_level=noise_level)
 
 
 if __name__ == "__main__":

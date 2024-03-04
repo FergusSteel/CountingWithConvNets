@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.transforms import Affine2D
 from scipy.ndimage import rotate
 import csv
+from PIL import Image
 
 # Generate #num_points amount of points with min_distance pixels between them
 def generate_points(num_points=12, canvas_size=(128,128), min_distance=20):
@@ -28,6 +29,7 @@ def load_mnist():
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
     x_train = x_train.reshape(-1, 28, 28, 1).astype('float32') / 255.
+    print("normal?", np.max(x_train[0]))
     x_test = x_test.reshape(-1, 28, 28, 1).astype('float32') / 255.
     y_train = to_categorical(y_train.astype('float32'))
     y_test = to_categorical(y_test.astype('float32'))
@@ -52,7 +54,7 @@ def augment_dataset(images, labels):
         print("Data Could Not Be Sorted Please Sample Randomly")
         return None
     
-def generate_map_config(images, labels, partitions, fname="output", num_digits=24, min_distance=28, prob_density=[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], scale_var_prob=0, scale_var_amount=0, rot_var_prob=0, rot_var_deg=0, train=1, arg=""):
+def generate_map_config(images, labels, partitions, fname="output", num_digits=24, min_distance=28, prob_density=[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], scale_var_prob=0, scale_var_amount=0, rot_var_prob=0, rot_var_deg=0, train=1, arg="", noise_level=0.0):
     # Generate Coordinates on 256x256 map (leave border at edge)
     xs, ys = generate_points(num_digits, (228,228), min_distance+(images[0].shape[0]*scale_var_amount))
     fig = plt.figure(figsize=(256 / 80, 256 / 80), dpi=80)
@@ -134,6 +136,15 @@ def generate_map_config(images, labels, partitions, fname="output", num_digits=2
 
     fig.set_facecolor('0')
     fig.savefig(f'{arg}{"train" if train else "test"}/x/{fname}.png', transparent=False)
+    image = Image.open(f'{arg}{"train" if train else "test"}/x/{fname}.png').convert("L")
+    image_array = np.asarray(image)
+    
+    # Addin gaussian noise
+    noise = np.abs(np.random.normal(0, noise_level, image_array.shape))
+    noisy_image_array = image_array + noise
+    noisy_image_array = np.clip(noisy_image_array, 0, 255)
+    noisy_image = Image.fromarray(noisy_image_array.astype(np.uint8))
+    noisy_image.save(f'{arg}{"train" if train else "test"}/x/{fname}.png')
     plt.close()
 
     with open(f'{arg}{"train" if train else "test"}/y/{fname}.csv', 'w', newline='') as f:
