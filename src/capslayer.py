@@ -25,7 +25,7 @@ class CapsuleLayer(nn.Module):
             else:
                 self.convs.append(nn.ConvTranspose2d(input_capsule_dimension, self.num_output_capsules * self.output_capsules_dimension, self.kernel_size, self.stride,padding=2,output_padding=1))
 
-    def forward(self, u):  # input [N,CAPS,C,H,W]
+    def forward(self, u): 
         if u.shape[1]!=self.num_input_capsules:
             raise ValueError("Wrong type of operation for capsule")
         op = self.op
@@ -34,38 +34,39 @@ class CapsuleLayer(nn.Module):
         num_output_capsules = self.num_output_capsules
         output_capsules_dimension = self.output_capsules_dimension
         routing = self.routing
-        N = u.shape[0]
+        N = u.shape[0] # This is always 1
         H_1=u.shape[3]
         W_1=u.shape[4]
         num_input_capsules = self.num_input_capsules
 
-        u_t_list = [u_t.squeeze(1) for u_t in u.split(1, 1)]  
+        u_t_list = [u_t.squeeze(1) for u_t in u.split(1, 1)]  # The received capsule outputs from previous layer
 
         u_hat_t_list = []
 
-        for i, u_t in zip(range(self.num_input_capsules), u_t_list):
+        for i, u_t in zip(range(self.num_input_capsules), u_t_list): # For each input capsules index and its output
             if op == "conv":
-                u_hat_t = self.convs[i](u_t)
+                u_hat_t = self.convs[i](u_t) # Run the convolutional operation over that capsules output
             elif op == "deconv":
                 u_hat_t = self.convs[i](u_t)
             else:
                 raise ValueError("Wrong type of operation for capsule")
             H_1 = u_hat_t.shape[2]
             W_1 = u_hat_t.shape[3]
-            u_hat_t = u_hat_t.reshape(N, num_output_capsules,output_capsules_dimension,H_1, W_1).transpose_(1,3).transpose_(2,4)
+            u_hat_t = u_hat_t.reshape(N, num_output_capsules,output_capsules_dimension,H_1, W_1).transpose_(1,3).transpose_(2,4) # Rearranges capsule output so spatial dimensions are first for the funky routing process
             u_hat_t_list.append(u_hat_t)
         v=self.update_routing(u_hat_t_list,kernel_size,N,H_1,W_1,num_input_capsules,num_output_capsules,routing)
         return v
     
     def update_routing(self,u_hat_t_list, kernel_size, N, H_1, W_1, num_input_capsules, num_output_capsules, routing):
-        one_kernel = torch.ones(1, num_output_capsules, kernel_size, kernel_size).cuda()  
-        b = torch.zeros(N, H_1, W_1, num_input_capsules, num_output_capsules).cuda()
-        b_t_list = [b_t.squeeze(3) for b_t in b.split(1, 3)]
+        local_kernel = torch.ones(1, num_output_capsules, kernel_size, kernel_size).cuda()  
+        logits_b = torch.zeros(N, H_1, W_1, num_input_capsules, num_output_capsules).cuda() # Initisalises the output logits
+        b_t_list = [b_t.squeeze(3) for b_t in logits_b.split(1, 3)] # removes the input dimensions so there are num_input many logit lists
         u_hat_t_list_sg = []
-        for u_hat_t in u_hat_t_list:
+        for u_hat_t in u_hat_t_list: # This part removes the outputs ofrom the GPU
             u_hat_t_sg=u_hat_t.detach()
             u_hat_t_list_sg.append(u_hat_t_sg)
 
+        # Routing loop
         for d in range(routing):
             if d < routing - 1:
                 u_hat_t_list_ = u_hat_t_list_sg
@@ -73,29 +74,31 @@ class CapsuleLayer(nn.Module):
                 u_hat_t_list_ = u_hat_t_list
 
             r_t_mul_u_hat_t_list = []
+            # For each capsule type.... do routing :)
             for b_t, u_hat_t in zip(b_t_list, u_hat_t_list_):
                 # b_t.transpose_(1, 3).transpose_(2, 3)  
                 # c_t = torch.nn.functional.softmax(b_t, dim=3)
 
                 # sum_c_t = nn_.conv2d_same(c_t, one_kernel, stride=(1, 1))
                 # routing softmax (N,H_1,W_1,t_1)
-                b_t.transpose_(1, 3).transpose_(2, 3)  #[N,t_1,H_1, W_1]
+                b_t.transpose_(1, 3).transpose_(2, 3) # reorganises the logits to be [dimensions, height, width] I do not understand why he does all this rearranging, but it doesn't change algorithm
+                # This then calculates the coupling coefficients by using softmax over the logits, I had to alter thsi code to allow for 0 padding in my network
                 try:
                     b_t_max = torch.nn.functional.max_pool2d(b_t,kernel_size,1,padding=2)
                     b_t_max = b_t_max.max(1, True)[0]
-                    c_t = torch.exp(b_t - b_t_max)
+                    c_t = torch.exp(b_t - b_t_max) # this is such a bizarre way to compute this???? But it still normalises it and computes the same as the softmax, its just wacky
                 except:
-                    c_t = torch.nn.functional.softmax(b_t, dim=3)
+                    c_t = torch.nn.functional.softmax(b_t, dim=3)   
                     
-                sum_c_t = nn_.conv2d_same(c_t, one_kernel, stride=(1, 1))  # [... , 1]  
+                sum_c_t = nn_.conv2d_same(c_t, local_kernel, stride=(1, 1)) # Runs the local kernel over the coupling coefficents
                 r_t = c_t / sum_c_t  
                 r_t = r_t.transpose(1, 3).transpose(1, 2)
                 r_t = r_t.unsqueeze(4)
-                r_t_mul_u_hat_t_list.append(r_t * u_hat_t)
+                r_t_mul_u_hat_t_list.append(r_t * u_hat_t) # Calculates the P in the paper, (before summing, basically its the outputs * the coupling coefficients)
             p = sum(r_t_mul_u_hat_t_list)
             v = squash(p)
             if d < routing - 1:
-                b_t_list_ = []
+                b_t_list_ = [] # resets to the new logits if not the last one (the prior probabilities shoudl always be the previous capsule outputs as stated in papers)
                 for b_t, u_hat_t in zip(b_t_list, u_hat_t_list_):
                     b_t.transpose_(1,3).transpose_(2,1)
                     b_t_list_.append(b_t + (u_hat_t * v).sum(4))
