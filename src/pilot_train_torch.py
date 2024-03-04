@@ -6,6 +6,9 @@ from pilot_utils import load_image, show_density_map
 from pilot_utils import load_batch, conv_model, TorchUNetModel
 from torch.optim import lr_scheduler
 from torch.utils.data import Dataset, DataLoader
+from convert_to_npz import *
+from pilot_utils import show_density_map, load_batch
+from capsmain import show_n_example
 
 # class ScatterMNISTDataset(Dataset),
 #   def __init
@@ -106,8 +109,8 @@ def train_model(model, optimiser, scheduler, batch_size, epochs):
 # compile the model
 optimiser = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=0.0001)
 lr_schedule = lr_scheduler.StepLR(optimiser, step_size=30, gamma=0.1)
-# model = train_model(model, optimiser, lr_schedule, 1, 10)
-# model.eval()
+model = train_model(model, optimiser, lr_schedule, 1, 10)
+model.eval()
 
 # checkpoint = torch.load("model.pt")
 # model.load_state_dict(checkpoint['model_state_dict'])
@@ -119,17 +122,19 @@ dat = load_batch(10)
 inputs = torch.from_numpy(dat[0]).float().to(device)
 outputs = model(inputs)
 
-def show_n_example(n):
-  for i in range(n):
-    print(f"Image Number {i+1}:")
-    print("-"*10)
-    print(f"True image count: {round(sum(sum(sum(dat[1][i]))) / 100)}")
-    print(f"Predicted image count: {round(sum(sum(sum(outputs.cpu().detach().numpy()[i]))) / 100)}")
-    for j in range(10):
-      print("-"*10)
-      print(f"Count for Digit {j}: True {round(sum(sum(dat[1][i][j])) / 100)}, Predicted: {(sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100):.2f}")
-      print(f"Confidence Error (True Count - Predicted Count): {(sum(sum(dat[1][i][j])) / 100 - sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100):.2f}")
-      if i == 1 and j == 9:
-        show_density_map(inputs[i], outputs[i][j])
+show_n_example(model, 10)
+
+# def show_n_example(n):
+#   for i in range(n):
+#     print(f"Image Number {i+1}:")
+#     print("-"*10)
+#     print(f"True image count: {round(sum(sum(sum(dat[1][i]))) / 100)}")
+#     print(f"Predicted image count: {round(sum(sum(sum(outputs.cpu().detach().numpy()[i]))) / 100)}")
+#     for j in range(10):
+#       print("-"*10)
+#       print(f"Count for Digit {j}: True {round(sum(sum(dat[1][i][j])) / 100)}, Predicted: {(sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100):.2f}")
+#       print(f"Confidence Error (True Count - Predicted Count): {(sum(sum(dat[1][i][j])) / 100 - sum(sum(outputs.cpu().detach().numpy()[i][j])) / 100):.2f}")
+#       if i == 1 and j == 9:
+#         show_density_map(inputs[i], outputs[i][j])
     
-    show_density_map(inputs[i], sum(outputs[i]))
+#     show_density_map(inputs[i], sum(outputs[i]))
