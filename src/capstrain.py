@@ -45,7 +45,7 @@ class MSELoss(nn.Module):
         for cat in range(10):
             loss += (self.lf(y_pred[cat], y_true[cat])) 
             loss += (abs(sum(sum(y_true[cat])) - sum(sum(y_pred[cat]))) / 100_000)
-            # Count loss is breaking
+            # Count loss is breaking 
             #loss *= abs(sum(sum(y_true[cat])) - sum(sum(y_pred[cat]))) * 0.001
             # disjoint_loss = torch.tensor(0.0).cuda()
             # for disjoint_cats in range(10):
@@ -129,8 +129,8 @@ class AverageMeter(object):
 def compute_acc(predict,target, digit_class):
     y_pred = predict.squeeze()
     y_true = target.squeeze()
-    true_count = sum(sum(y_true[digit_class]))
-    pred_count = sum(sum(y_pred[digit_class]))
+    true_count = sum(sum(y_true[digit_class])) / 100
+    pred_count = sum(sum(y_pred[digit_class])) / 100
     err = abs(true_count - pred_count)
     return err
 

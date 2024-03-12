@@ -241,50 +241,30 @@ class CapsNetBasic(nn.Module):
             nn.Conv2d(16, 10, 5, 1, padding=2),
         )
 
-        # self.regularisation_conv1 = nn.Sequential(
-        #     nn.Conv2d(10, 128, 1, 1, padding=0),
-        #     nn.ReLU()
-        # )
-        # self.regularisation_conv2 = nn.Sequential(
-        #     nn.Conv2d(128, 1, 1, 1, padding=0),
-        # )
-
 
     def forward(self, x):
         x = self.conv_1(x)
         x.unsqueeze_(1)
-        #print(x.shape)
 
         x = self.primary_caps(x)
-        #print(x.shape)
 
         x = self.seg_caps(x)
-        #display_capsule_grid(x)
-        #print(x.shape)
         x = x.squeeze_(1)
-        #x=self.conv_2(x)
-        #print("conv2", x.shape)
         x = x.squeeze_(0)
         recon = x
         
-        #x = self.reconstruction_conv1(x)
         x = self.reconstruction_conv2(x)
-        # x  = torch.tensor([self.reconstruction_conv2(x[caps]) for caps in range(self.n_classes)])
-        #print("2", x.shape)
         
-        # Fix the shape following the reconstruction convs broski
+        # Fix the shape following the conv
         x = x.squeeze_(1)
         x = x.unsqueeze(0)
         
         
-        v_lens = torch.norm(x, p=2, dim=0)
-        # print("pnorm", x.shape)
-        #print("A", v_lens.shape)
-        # # #print("B", v_lens.shape)
-        # #print("v_lens", v_lens.shape)
-        v_lens = v_lens.unsqueeze(0)
+        # v_lens = torch.norm(x, p=2, dim=0)
 
-        return v_lens, recon #regular
+        # v_lens = v_lens.unsqueeze(0)
+
+        return x, recon #regular
     
 
 class ReconstructionNet(nn.Module):
@@ -292,21 +272,20 @@ class ReconstructionNet(nn.Module):
         super().__init__()
         self.num_classes = n_classes
         self.reconstruction_conv1 = nn.Sequential(
-            nn.Conv2d(1, 64, 1, 1, padding=0),
+            nn.Conv2d(16, 64, 1, 1, padding=0),
+            nn.ReLU()
         )
         self.reconstruction_conv2 = nn.Sequential(
             nn.Conv2d(64, 128, 1, 1, padding=0),
+            nn.ReLU(),
         )
         self.reconstruction_conv3 = nn.Sequential(
             nn.Conv2d(128, 1, 1, 1, padding=0),
-        )
-        self.reconstruction_conv4 = nn.Sequential(
-            nn.Conv2d(16, 1, 1, 1, padding=0),
+            nn.Sigmoid()
         )
 
     def forward(self,x):
         x = x.squeeze(0)
-        x = x.unsqueeze(1)
         print(x.shape)
         x = self.reconstruction_conv1(x)
         print("step1", x.shape)
@@ -314,6 +293,6 @@ class ReconstructionNet(nn.Module):
         print("step2", x.shape)
         x = self.reconstruction_conv3(x)
         x = x.squeeze(1)
-        print("step3", x.shape)
-        x = self.reconstruction_conv4(x)
+        # print("step3", x.shape)
+        # x = self.reconstruction_conv4(x)
         return x
