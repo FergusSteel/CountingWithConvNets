@@ -13,12 +13,21 @@ warnings.filterwarnings("ignore")
 
 
 class SpreadMNISTDataset(Dataset):
-    def __init__(self, num_points, train=True, transform=None, path=""):
-        self.transform = transform
+    def __init__(self, num_points, train=True, noise_db=0, path="", std=5.1):
+        self.noise_db = noise_db
         self.train = train
-        self.dmaps = convert_to_npz.load_data(num_points, train, path)
+        self.dmaps = convert_to_npz.load_data(num_points,  path, train)
         self.path = path
+
+        def noise_function(image, db_iteration, std_dev=std):
+    
+            new_std = std_dev * (np.sqrt(2)**db_iteration)
+            noise = np.abs(np.random.normal(0, new_std, image.shape))
+            noisy_image = image + noise
+            noisy_image = torch.clamp(noisy_image, 0, 255.)
+            return noisy_image
         
+        self.noise_function = noise_function
     
 
     def __len__(self):
@@ -35,10 +44,11 @@ class SpreadMNISTDataset(Dataset):
         #image = rgb_to_hsv(image)[:, :, 2]
         dmap = self.dmaps[idx]
 
+
         sample = {'image': torch.from_numpy(image), 'dmap': torch.from_numpy(dmap)}
 
-        if self.transform:
-            sample = self.transform(sample)
+        if self.noise_db != 0:
+            sample["image"] = self.noise_function(sample["image"], self.noise_db)
         
         return sample
     

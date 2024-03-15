@@ -8,14 +8,14 @@ from tqdm import tqdm
 import torch
 
 # Define a function to create a 2D Gaussian kernel
-def create_density_gaussian(points):
+def create_density_gaussian(points, sigma=2):
     map  = np.zeros((10,256,256))
     for i in range(10):
         coords = points[i]
         for coord in coords:
             map[i][int(coord[1])][int(coord[0])] = 100
     
-        map[i] = np.flipud(gaussian_filter(map[i], sigma=2)) #np.flipud(map[i])#
+        map[i] = np.flipud(gaussian_filter(map[i], sigma=sigma)) #np.flipud(map[i])#
     
     return map
     

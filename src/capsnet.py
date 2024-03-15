@@ -266,6 +266,44 @@ class CapsNetBasic(nn.Module):
 
         return x, recon #regular
     
+class CapsNetComplex(nn.Module):
+    def __init__(self, n_classes=10):
+        self.n_classes=n_classes
+        super().__init__()
+        self.conv_1 = nn.Sequential(
+            nn.Conv2d(1, 128, 5, 1, padding="same"),
+        )
+        #[N,CAPS,C,H,W]
+        self.primary_caps = nn.Sequential(  # 1/2
+            CapsuleLayer(1, 128, "conv", kernel_size=5, stride=1, num_output_capsules=32, output_capsules_dimension=8, routing=1),
+        )
+
+        self.seg_caps= nn.Sequential(  # 1/2s
+            CapsuleLayer(32, 8, "conv", kernel_size=5, stride=1, num_output_capsules=1, output_capsules_dimension=16, routing=5),
+        ) 
+        
+        self.reconstruction_conv2 = nn.Sequential(
+            nn.Conv2d(16, 10, 5, 1, padding=2),
+        )
+
+    def forward(self, x):
+        x = self.conv_1(x)
+        x.unsqueeze_(1)
+
+        x = self.primary_caps(x)
+
+        x = self.seg_caps(x)
+        x = x.squeeze_(1)
+        x = x.squeeze_(0)
+        recon = x
+        
+        x = self.reconstruction_conv2(x)
+        
+        x = x.squeeze_(1)
+        x = x.unsqueeze(0)
+        
+        return x, recon
+    
 
 class ReconstructionNet(nn.Module):
     def __init__(self, n_classes=10):
@@ -286,11 +324,11 @@ class ReconstructionNet(nn.Module):
 
     def forward(self,x):
         x = x.squeeze(0)
-        print(x.shape)
+        # print(x.shape)
         x = self.reconstruction_conv1(x)
-        print("step1", x.shape)
+        # print("step1", x.shape)
         x = self.reconstruction_conv2(x)
-        print("step2", x.shape)
+        # print("step2", x.shape)
         x = self.reconstruction_conv3(x)
         x = x.squeeze(1)
         # print("step3", x.shape)
